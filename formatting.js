@@ -45,11 +45,11 @@ function setupDataDigestedSheet() {
 function setupFormulae() {
   var sheet = getDataDigestedSheet();
 
-  var g1Formula = '={ "Type - auto"; Transaction_Types($A2:$A, H2:H) }';
+  var g1Formula = '={ "Type"; Transaction_Types($A2:$A, H2:H) }';
   sheet.getRange("G1").setFormula(g1Formula);
 
   var h1Formula =
-    '={{"Parent Category - auto", "Chld Category - auto"}; splitCategoryRange($D2:$D)}';
+    '={{"Parent Category", "Chld Category"}; splitCategoryRange($D2:$D)}';
   sheet.getRange("H1").setFormula(h1Formula);
 }
 
