@@ -1,6 +1,7 @@
 const BLACK = "#000000";
 
 function setupDataDigestedSheet() {
+  setupFormulae();
   applyFormatting();
   recreateConditionalFormattingRules();
 }
@@ -8,15 +9,12 @@ function setupDataDigestedSheet() {
 function setupFormulae() {
   var sheet = getDataDigestedSheet();
 
-  sheet
-    .getRange("G1")
-    .setFormula('={ "Type_auto"; Transaction_Types($A2:$A, H2:H) }');
+  var g1Formula = '={ "Type - auto"; Transaction_Types($A2:$A, H2:H) }';
+  sheet.getRange("G1").setFormula(g1Formula);
 
-  sheet
-    .getRange("H1")
-    .setFormula(
-      '={{"Parent Category", "Chld Category"}; splitCategoryRange($D2:$D)}'
-    );
+  var h1Formula =
+    '={{"Parent Category - auto", "Chld Category - auto"}; splitCategoryRange($D2:$D)}';
+  sheet.getRange("H1").setFormula(h1Formula);
 }
 
 function recreateConditionalFormattingRules() {
