@@ -1,8 +1,28 @@
-function foo() {
+const BLACK = "#000000";
+
+function setupDataDigestedSheet() {
+  applyFormatting();
+  recreateConditionalFormattingRules();
+}
+
+function setupFormulae() {
+  var sheet = getDataDigestedSheet();
+
+  sheet
+    .getRange("G1")
+    .setFormula('={ "Type_auto"; Transaction_Types($A2:$A, H2:H) }');
+
+  sheet
+    .getRange("H1")
+    .setFormula(
+      '={{"Parent Category", "Chld Category"}; splitCategoryRange($D2:$D)}'
+    );
+}
+
+function recreateConditionalFormattingRules() {
   var sheet = getDataDigestedSheet();
   var rules = [];
 
-  // https://developers.google.com/apps-script/reference/spreadsheet/conditional-format-rule-builder
   var rule1 = createIncomeConditionalFormattingRuleForIncome();
   rules.push(rule1);
 
@@ -12,8 +32,21 @@ function foo() {
   var rule3 = createConditionalFormattingRuleForTransferInColumnH();
   rules.push(rule3);
 
-  // Set the rules back on the sheet
   sheet.setConditionalFormatRules(rules);
+}
+
+function newConditionalFormattingBuilderFactory(
+  ranges,
+  formula,
+  backgroundColor
+) {
+  // https://developers.google.com/apps-script/reference/spreadsheet/conditional-format-rule-builder
+  return SpreadsheetApp.newConditionalFormatRule()
+    .setRanges(ranges)
+    .whenFormulaSatisfied(formula)
+    .setFontColor(BLACK)
+    .setBackground(backgroundColor)
+    .setBold(false);
 }
 
 function getDataDigestedSheet() {
@@ -26,37 +59,30 @@ function getDataDigestedSheet() {
   return sheet;
 }
 
-const BLACK = "#000000";
-
 function createIncomeConditionalFormattingRuleForIncome() {
   var ranges = [getDataDigestedSheet().getRange("A2:I2499")];
   var formula = '=$G2="Income"';
   var backgroundColor = "#e6efdb";
-  var conditionalFormattingBuilder = newConditionalFormattingBuilderFactory(ranges, formula, backgroundColor);
+  var conditionalFormattingBuilder = newConditionalFormattingBuilderFactory(
+    ranges,
+    formula,
+    backgroundColor
+  );
 
   var rule = conditionalFormattingBuilder.build();
 
   return rule;
 }
 
-function newConditionalFormattingBuilderFactory(
-    ranges,
-    formula,
-    backgroundColor
-) {
-  return SpreadsheetApp.newConditionalFormatRule()
-    .setBackground(backgroundColor)
-    .setFontColor(BLACK)
-    .setBold(false)
-    .setRanges(ranges)
-    .whenFormulaSatisfied(formula);
-}
-
 function createConditionalFormattingRuleForTransferInColumnG() {
   var ranges = [getDataDigestedSheet().getRange("A2:I2499")];
   var formula = '=$G2="Transfer"';
   var backgroundColor = "#93CCEA";
-  var conditionalFormattingBuilder = newConditionalFormattingBuilderFactory(ranges, formula, backgroundColor);
+  var conditionalFormattingBuilder = newConditionalFormattingBuilderFactory(
+    ranges,
+    formula,
+    backgroundColor
+  );
 
   var rule = conditionalFormattingBuilder.build();
 
@@ -67,7 +93,11 @@ function createConditionalFormattingRuleForTransferInColumnH() {
   var ranges = [getDataDigestedSheet().getRange("A2:I2499")];
   var formula = '=$H2="Transfer"';
   var backgroundColor = "#d9e7fd";
-  var conditionalFormattingBuilder = newConditionalFormattingBuilderFactory(ranges, formula, backgroundColor);
+  var conditionalFormattingBuilder = newConditionalFormattingBuilderFactory(
+    ranges,
+    formula,
+    backgroundColor
+  );
 
   var rule = conditionalFormattingBuilder.build();
 
@@ -154,55 +184,3 @@ function applyFormatting() {
 
   console.log("Formatting ${sheetName}...done");
 }
-
-// /**
-//  * Logs all the conditional formatting rules for the 'Data - Digested' sheet.
-//  */
-// function logConditionalFormatting() {
-//   var sheetName = "Data - Digested";
-//   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
-//   if (!sheet) {
-//     console.log('${sheetName}" not found.');
-//     return;
-//   }
-
-//   // Get the conditional formatting rules for the sheet
-//   var rules = sheet.getConditionalFormatRules();
-
-//   if (rules.length === 0) {
-//     console.log("No conditional formatting rules found.");
-//     return;
-//   }
-
-//   console.log("// Conditional Formatting Rules");
-
-//   rules.forEach(function(rule, index) {
-//     var ranges = rule.getRanges();
-//     var criteriaType = rule.getCriteriaType();
-//     var criteriaValues = rule.getCriteriaValues();
-//     var format = rule.getBooleanCondition();
-
-//     var rangesStr = ranges
-//       .map((range) => `'${range.getA1Notation()}'`)
-//       .join(", ");
-
-//     console.log(`// Conditional Formatting Rule ${index + 1}`);
-//     console.log(`var range = sheet.getRange(${rangesStr});`);
-//     console.log(`var rule = SpreadsheetApp.newConditionalFormatRule()`);
-
-//     var criteriaMethod = `when${criteriaType}`;
-//     var criteriaArgs = criteriaValues.map((value) => `'${value}'`).join(", ");
-
-//     console.log(`  .${criteriaMethod}(${criteriaArgs})`);
-
-//     // Example for setting background color, adjust based on actual formatting
-//     console.log(`  .setBackground('${format.getBackground()}')`);
-
-//     // Example for setting font color, adjust based on actual formatting
-//     console.log(`  .setFontColor('${format.getFontColor()}')`);
-
-//     console.log(`  .setRanges([range])`);
-//     console.log(`  .build();`);
-//     console.log(`sheet.setConditionalFormatRules([rule]);`);
-//   });
-// }
