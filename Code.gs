@@ -1,3 +1,38 @@
+function splitCategory(categoryString) {
+  // if (typeof categoryString !== "string" || categoryString.length === 0) {
+  //   return ["", ""];
+  // }
+
+  try {
+    var parts = categoryString.split(":");
+    return [parts[0] || "", parts[1] || ""];
+  } catch (e) {
+    console.log("splitCategory could not split ${categoryString}");
+    return ["", ""];
+  }
+}
+
+/**
+ * @param {Array} range - A 2D array of category strings.
+ * @return {Array} - A 2D array where each row contains the split results.
+ * @customfunction
+ */
+function splitCategoryRange(range) {
+  return range.map(function(row) {
+    var categoryString = row[0]; // Access the first cell in the row
+    return splitCategory(categoryString);
+  });
+}
+
+// /**
+//  * @param {Array} range - A 2D array of category strings.
+//  * @return {Array} - A 2D array where each row contains the split results.
+//  * @customfunction
+//  */
+// function processCategoryRange(range) {
+//   return splitCategoryRange(range);
+// }
+
 /**
  * Custom function to determine the transaction type based on the category.
  *
@@ -71,7 +106,7 @@ function Former_Transaction_Types(accounts, categories) {
   }
 
   // Map each category to the result of Transaction_Type
-  return categories.map(function (category) {
+  return categories.map(function(category) {
     return Transaction_Type(category);
   });
 }
