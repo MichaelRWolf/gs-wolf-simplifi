@@ -1,13 +1,3 @@
-function getDataDigestedSheet() {
-  var sheetName = "Data - Digested";
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
-  if (!sheet) {
-    console.log('${sheetName}" not found.');
-    return;
-  }
-  return sheet;
-}
-
 function foo() {
   var sheet = getDataDigestedSheet();
   var rules = [];
@@ -26,6 +16,16 @@ function foo() {
   sheet.setConditionalFormatRules(rules);
 }
 
+function getDataDigestedSheet() {
+  var sheetName = "Data - Digested";
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  if (!sheet) {
+    console.log('${sheetName}" not found.');
+    return;
+  }
+  return sheet;
+}
+
 const BLACK = "#000000";
 
 function createIncomeConditionalFormattingRuleForIncome() {
@@ -33,15 +33,26 @@ function createIncomeConditionalFormattingRuleForIncome() {
   var formula = '=$G2="Income"';
   var ranges = [sheet.getRange("A2:I2499")];
   var backgroundColor = "#e6efdb";
-  var rule = SpreadsheetApp.newConditionalFormatRule()
-    .setRanges(ranges)
-    .whenFormulaSatisfied(formula)
+  var rule = newConditionalFormattingBuilderFactory(
+    backgroundColor,
+    ranges,
+    formula
+  ).build();
+
+  return rule;
+}
+
+function newConditionalFormattingBuilderFactory(
+  backgroundColor,
+  ranges,
+  formula
+) {
+  return SpreadsheetApp.newConditionalFormatRule()
     .setBackground(backgroundColor)
     .setFontColor(BLACK)
     .setBold(true)
-    .build();
-
-  return rule;
+    .setRanges(ranges)
+    .whenFormulaSatisfied(formula);
 }
 
 function createConditionalFormattingRuleForTransferInColumnG() {
@@ -49,13 +60,11 @@ function createConditionalFormattingRuleForTransferInColumnG() {
   var formula = '=$G2="Transfer"';
   var ranges = [sheet.getRange("A2:I2499")];
   var backgroundColor = "#93CCEA";
-  var rule = SpreadsheetApp.newConditionalFormatRule()
-    .setRanges(ranges)
-    .whenFormulaSatisfied(formula)
-    .setBackground(backgroundColor)
-    .setFontColor(BLACK)
-    .setBold(true)
-    .build();
+  var rule = newConditionalFormattingBuilderFactory(
+    backgroundColor,
+    ranges,
+    formula
+  ).build();
 
   return rule;
 }
@@ -65,13 +74,11 @@ function createConditionalFormattingRuleForTransferInColumnH() {
   var formula = '=$H2="Transfer"';
   var backgroundColor = "#d9e7fd";
   var ranges = [sheet.getRange("A2:I2499")];
-  var rule = SpreadsheetApp.newConditionalFormatRule()
-    .setRanges(ranges)
-    .whenFormulaSatisfied(formula)
-    .setBackground(backgroundColor)
-    .setFontColor(BLACK)
-    .setBold(true)
-    .build();
+  var rule = newConditionalFormattingBuilderFactory(
+    backgroundColor,
+    ranges,
+    formula
+  ).build();
 
   return rule;
 }
