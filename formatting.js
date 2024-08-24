@@ -29,56 +29,47 @@ function getDataDigestedSheet() {
 const BLACK = "#000000";
 
 function createIncomeConditionalFormattingRuleForIncome() {
-  var sheet = getDataDigestedSheet();
+  var ranges = [getDataDigestedSheet().getRange("A2:I2499")];
   var formula = '=$G2="Income"';
-  var ranges = [sheet.getRange("A2:I2499")];
   var backgroundColor = "#e6efdb";
-  var rule = newConditionalFormattingBuilderFactory(
-    backgroundColor,
-    ranges,
-    formula
-  ).build();
+  var conditionalFormattingBuilder = newConditionalFormattingBuilderFactory(ranges, formula, backgroundColor);
+
+  var rule = conditionalFormattingBuilder.build();
 
   return rule;
 }
 
 function newConditionalFormattingBuilderFactory(
-  backgroundColor,
-  ranges,
-  formula
+    ranges,
+    formula,
+    backgroundColor
 ) {
   return SpreadsheetApp.newConditionalFormatRule()
     .setBackground(backgroundColor)
     .setFontColor(BLACK)
-    .setBold(true)
+    .setBold(false)
     .setRanges(ranges)
     .whenFormulaSatisfied(formula);
 }
 
 function createConditionalFormattingRuleForTransferInColumnG() {
-  var sheet = getDataDigestedSheet();
+  var ranges = [getDataDigestedSheet().getRange("A2:I2499")];
   var formula = '=$G2="Transfer"';
-  var ranges = [sheet.getRange("A2:I2499")];
   var backgroundColor = "#93CCEA";
-  var rule = newConditionalFormattingBuilderFactory(
-    backgroundColor,
-    ranges,
-    formula
-  ).build();
+  var conditionalFormattingBuilder = newConditionalFormattingBuilderFactory(ranges, formula, backgroundColor);
+
+  var rule = conditionalFormattingBuilder.build();
 
   return rule;
 }
 
 function createConditionalFormattingRuleForTransferInColumnH() {
-  var sheet = getDataDigestedSheet();
+  var ranges = [getDataDigestedSheet().getRange("A2:I2499")];
   var formula = '=$H2="Transfer"';
   var backgroundColor = "#d9e7fd";
-  var ranges = [sheet.getRange("A2:I2499")];
-  var rule = newConditionalFormattingBuilderFactory(
-    backgroundColor,
-    ranges,
-    formula
-  ).build();
+  var conditionalFormattingBuilder = newConditionalFormattingBuilderFactory(ranges, formula, backgroundColor);
+
+  var rule = conditionalFormattingBuilder.build();
 
   return rule;
 }
