@@ -32,10 +32,11 @@ function createIncomeConditionalFormattingRuleForIncome() {
   var sheet = getDataDigestedSheet();
   var formula = '=$G2="Income"';
   var ranges = [sheet.getRange("A2:I2499")];
+  var backgroundColor = "#e6efdb";
   var rule = SpreadsheetApp.newConditionalFormatRule()
     .setRanges(ranges)
     .whenFormulaSatisfied(formula)
-    .setBackground("#e6efdb")
+    .setBackground(backgroundColor)
     .setFontColor(BLACK)
     .setBold(true)
     .build();
@@ -47,10 +48,11 @@ function createConditionalFormattingRuleForTransferInColumnG() {
   var sheet = getDataDigestedSheet();
   var formula = '=$G2="Transfer"';
   var ranges = [sheet.getRange("A2:I2499")];
+  var backgroundColor = "#93CCEA";
   var rule = SpreadsheetApp.newConditionalFormatRule()
     .setRanges(ranges)
     .whenFormulaSatisfied(formula)
-    .setBackground("#93CCEA")
+    .setBackground(backgroundColor)
     .setFontColor(BLACK)
     .setBold(true)
     .build();
