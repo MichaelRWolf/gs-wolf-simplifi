@@ -1,4 +1,4 @@
-function getTheRightSheet() {
+function getDataDigestedSheet() {
   var sheetName = "Data - Digested";
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   if (!sheet) {
@@ -9,7 +9,7 @@ function getTheRightSheet() {
 }
 
 function foo() {
-  var sheet = getTheRightSheet();
+  var sheet = getDataDigestedSheet();
   var rules = [];
 
   // https://developers.google.com/apps-script/reference/spreadsheet/conditional-format-rule-builder
@@ -27,7 +27,7 @@ function foo() {
 }
 
 function createIncomeConditionalFormattingRuleForIncome() {
-  var sheet = getTheRightSheet();
+  var sheet = getDataDigestedSheet();
   var range = sheet.getRange("A2:I2499");
 
   var rule = SpreadsheetApp.newConditionalFormatRule()
@@ -42,7 +42,7 @@ function createIncomeConditionalFormattingRuleForIncome() {
 }
 
 function createConditionalFormattingRuleForTransferInColumnG() {
-  var sheet = getTheRightSheet();
+  var sheet = getDataDigestedSheet();
   var range = sheet.getRange("A2:I2499");
 
   var rule = SpreadsheetApp.newConditionalFormatRule()
@@ -57,7 +57,7 @@ function createConditionalFormattingRuleForTransferInColumnG() {
 }
 
 function createConditionalFormattingRuleForTransferInColumnH() {
-  var sheet = getTheRightSheet();
+  var sheet = getDataDigestedSheet();
   var range = sheet.getRange("A2:I2499");
 
   var rule = SpreadsheetApp.newConditionalFormatRule()
