@@ -7,16 +7,16 @@ function applyFormatting() {
   }
   console.log("Formatting ${sheetName}");
 
-  // 1:1
+  // Frozen & Bold
   sheet.setFrozenRows(1);
+  sheet.setFrozenColumns(4);
   sheet.getRange("1:1").setFontWeight("bold");
 
-  // A:C
-  sheet.setFrozenColumns(4);
+  // Number Format
+  var amountRange = sheet.getRange("F2:F");
+  amountRange.setNumberFormat('"("0.00")";(0.00);0.00');
 
-  // sheet.getRange("E2:F").setNumberFormat("0.0"); // E2:F
-  /// range.setNumberFormat('"("0.00")";(0.00);0.00');
-
+  // Column Width
   // account	postedOn	payee	category	tags	amount	Type	Parent Category	Chld Category
   sheet.setColumnWidth(1, 70); // A:A - account
   sheet.setColumnWidth(2, 70); // B:B - postedOn
