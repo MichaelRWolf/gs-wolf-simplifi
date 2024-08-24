@@ -1,5 +1,41 @@
 const BLACK = "#000000";
 
+function setupMenus() {
+  var ui = SpreadsheetApp.getUi();
+
+  ui.createMenu("Custom Menu")
+    .addItem(
+      "3.c createConditionalFormattingRuleForTransferInColumnH",
+      "createConditionalFormattingRuleForTransferInColumnH"
+    )
+    .addItem(
+      "3.b createConditionalFormattingRuleForTransferInColumnG",
+      "createConditionalFormattingRuleForTransferInColumnG"
+    )
+    .addItem(
+      "3.a createIncomeConditionalFormattingRuleForIncome",
+      "createIncomeConditionalFormattingRuleForIncome"
+    )
+    .addItem(
+      "3. recreateConditionalFormattingRules",
+      "recreateConditionalFormattingRules"
+    )
+    .addItem("2. applyFormatting", "applyFormatting")
+    .addItem("1. setupFormulae", "setupFormulae")
+    .addItem("0. setupDataDigestedSheet", "setupDataDigestedSheet")
+    .addItem("-. setupMenus", "setupMenus")
+    .addItem("----", "doNothing")
+
+    // .addItem("X - setupTriggers", "setupTriggers")
+    // .addItem("deleteAllTriggers", "deleteAllTriggers")
+    // .addItem("listTriggers", "listTriggers")
+
+    // .addItem("----", "doNothing")
+    // .addItem("myOnOpen", "myOnOpen")
+
+    .addToUi();
+}
+
 function setupDataDigestedSheet() {
   setupFormulae();
   applyFormatting();
