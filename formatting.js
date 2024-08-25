@@ -196,7 +196,7 @@ function applyFormatting() {
 
   // Number Format
   var amountRange = sheet.getRange("F2:F");
-  amountRange.setNumberFormat('"("0.00")";(0.00);0.00');
+  amountRange.setNumberFormat('"("#,##0.00")";(#,##0.00);#,##0.00');
 
   // Column Width
   // account	postedOn	payee	category	tags	amount	Type	Parent Category	Chld Category
