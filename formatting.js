@@ -144,14 +144,26 @@ function recreateConditionalFormattingRules() {
   //   backgroundColor
   // );
 
-  var rule1 = newConditionalFormattingRule([getDataDigestedSheet().getRange("A2:I2499")], '=$G2="Income"', "#e6efdb");
-  rules.push(rule1);
+  var incomeRule = newConditionalFormattingRule(
+    [getDataDigestedSheet().getRange("A2:I2499")],
+    '=$G2="Income"',
+    "#e6efdb"
+  );
+  rules.push(incomeRule);
 
-  var rule2 = newConditionalFormattingRule([getDataDigestedSheet().getRange("A2:I2499")], '=$G2="Transfer"', "#93CCEA");
-  rules.push(rule2);
+  var transferTypeRule = newConditionalFormattingRule(
+    [getDataDigestedSheet().getRange("A2:I2499")],
+    '=$G2="Transfer"',
+    "#93CCEA"
+  );
+  rules.push(transferTypeRule);
 
-  var rule3 = newConditionalFormattingRule([getDataDigestedSheet().getRange("A2:I2499")], '=$H2="Transfer"', "#d9e7fd");
-  rules.push(rule3);
+  var transferCategoryRule = newConditionalFormattingRule(
+    [getDataDigestedSheet().getRange("A2:I2499")],
+    '=$H2="Transfer"',
+    "#d9e7fd"
+  );
+  rules.push(transferCategoryRule);
 
   sheet.setConditionalFormatRules(rules);
 }
