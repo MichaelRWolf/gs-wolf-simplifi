@@ -156,7 +156,7 @@ function recreateConditionalFormattingRules() {
   sheet.setConditionalFormatRules(rules);
 }
 
-function newConditionalRule(ranges, formula, backgroundColor) {
+function newConditionalFormattingRule(ranges, formula, backgroundColor) {
   return newConditionalFormattingBuilderFactory(
     ranges,
     formula,
@@ -168,27 +168,21 @@ function createIncomeConditionalFormattingRuleForIncome() {
   var ranges = [getDataDigestedSheet().getRange("A2:I2499")];
   var formula = '=$G2="Income"';
   var backgroundColor = "#e6efdb";
-  var rule = newConditionalRule(ranges, formula, backgroundColor);
-
-  return rule;
+  return newConditionalFormattingRule(ranges, formula, backgroundColor);
 }
 
 function createConditionalFormattingRuleForTransferInColumnG() {
   var ranges = [getDataDigestedSheet().getRange("A2:I2499")];
   var formula = '=$G2="Transfer"';
   var backgroundColor = "#93CCEA";
-  var rule = newConditionalRule(ranges, formula, backgroundColor);
-
-  return rule;
+  return newConditionalFormattingRule(ranges, formula, backgroundColor);
 }
 
 function createConditionalFormattingRuleForTransferInColumnH() {
   var ranges = [getDataDigestedSheet().getRange("A2:I2499")];
   var formula = '=$H2="Transfer"';
   var backgroundColor = "#d9e7fd";
-  var rule = newConditionalRule(ranges, formula, backgroundColor);
-
-  return rule;
+  return newConditionalFormattingRule(ranges, formula, backgroundColor);
 }
 
 function logConditionalFormatting() {
