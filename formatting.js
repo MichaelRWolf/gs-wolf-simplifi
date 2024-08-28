@@ -57,6 +57,29 @@ function recreateConditionalFormattingRules() {
   var sheet = getDataDigestedSheet();
   var rules = [];
 
+  // Consolodate using map --
+  // see: https://chatgpt.com/c/9cc333b8-0808-4b27-b1f0-107a1b373bf6
+  //   var ruleConfigs = [
+  //     { range: "A2:I2499", formula: '=$G2="Income"', backgroundColor: "#e6efdb" },
+  //     { range: "A2:I2499", formula: '=$G2="Transfer"', backgroundColor: "#93CCEA" },
+  //     { range: "A2:I2499", formula: '=$H2="Transfer"', backgroundColor: "#d9e7fd" }
+  //   ];
+  //
+  //   var rules = ruleConfigs.map(function(config) {
+  //     return createConditionalFormattingRule(config);
+  //   });
+  //
+  //   sheet.setConditionalFormatRules(rules);
+  // }
+
+  // function createConditionalFormattingRule({ range, formula, backgroundColor }) {
+  // var ranges = [getDataDigestedSheet().getRange(range)];
+  // var conditionalFormattingBuilder = newConditionalFormattingBuilderFactory(
+  //   ranges,
+  //   formula,
+  //   backgroundColor
+  // );
+
   var rule1 = createIncomeConditionalFormattingRuleForIncome();
   rules.push(rule1);
 
@@ -97,13 +120,11 @@ function createIncomeConditionalFormattingRuleForIncome() {
   var ranges = [getDataDigestedSheet().getRange("A2:I2499")];
   var formula = '=$G2="Income"';
   var backgroundColor = "#e6efdb";
-  var conditionalFormattingBuilder = newConditionalFormattingBuilderFactory(
-    ranges,
-    formula,
-    backgroundColor
-  );
-
-  var rule = conditionalFormattingBuilder.build();
+  var rule = newConditionalFormattingBuilderFactory(
+      ranges,
+      formula,
+      backgroundColor
+  ).build();
 
   return rule;
 }
@@ -112,13 +133,11 @@ function createConditionalFormattingRuleForTransferInColumnG() {
   var ranges = [getDataDigestedSheet().getRange("A2:I2499")];
   var formula = '=$G2="Transfer"';
   var backgroundColor = "#93CCEA";
-  var conditionalFormattingBuilder = newConditionalFormattingBuilderFactory(
-    ranges,
-    formula,
-    backgroundColor
-  );
-
-  var rule = conditionalFormattingBuilder.build();
+  var rule = newConditionalFormattingBuilderFactory(
+      ranges,
+      formula,
+      backgroundColor
+  ).build();
 
   return rule;
 }
@@ -127,13 +146,11 @@ function createConditionalFormattingRuleForTransferInColumnH() {
   var ranges = [getDataDigestedSheet().getRange("A2:I2499")];
   var formula = '=$H2="Transfer"';
   var backgroundColor = "#d9e7fd";
-  var conditionalFormattingBuilder = newConditionalFormattingBuilderFactory(
-    ranges,
-    formula,
-    backgroundColor
-  );
-
-  var rule = conditionalFormattingBuilder.build();
+  var rule = newConditionalFormattingBuilderFactory(
+      ranges,
+      formula,
+      backgroundColor
+  ).build();
 
   return rule;
 }
