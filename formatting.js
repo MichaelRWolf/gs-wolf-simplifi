@@ -95,11 +95,15 @@ function setupDataDigestedSheet() {
 function setupFormulae() {
   const sheet = getDataDigestedSheet();
 
+  const a1Formula =
+    "=query('Data - Raw'!A:J,\"Select B, D, E, G, H, J order by D DESC, B, E, J\", 1)";
+  sheet.getRange("A1").setFormula(a1Formula);
+
   const g1Formula = '={ "Type"; Transaction_Types($A2:$A, H2:H) }';
   sheet.getRange("G1").setFormula(g1Formula);
 
   const h1Formula =
-      '={{"Parent Category", "Child Category"}; splitCategoryRange($D2:$D)}';
+    '={{"Parent Category", "Child Category"}; splitCategoryRange($D2:$D)}';
   sheet.getRange("H1").setFormula(h1Formula);
 }
 
@@ -145,23 +149,23 @@ function recreateConditionalFormattingRules() {
   // );
 
   const incomeRule = newConditionalFormattingRule(
-      [getDataDigestedSheet().getRange("A2:I2499")],
-      '=$G2="Income"',
-      "#e6efdb"
+    [getDataDigestedSheet().getRange("A2:I2499")],
+    '=$G2="Income"',
+    "#e6efdb"
   );
   rules.push(incomeRule);
 
   const transferTypeRule = newConditionalFormattingRule(
-      [getDataDigestedSheet().getRange("A2:I2499")],
-      '=$G2="Transfer"',
-      "#93CCEA"
+    [getDataDigestedSheet().getRange("A2:I2499")],
+    '=$G2="Transfer"',
+    "#93CCEA"
   );
   rules.push(transferTypeRule);
 
   const transferCategoryRule = newConditionalFormattingRule(
-      [getDataDigestedSheet().getRange("A2:I2499")],
-      '=$H2="Transfer"',
-      "#d9e7fd"
+    [getDataDigestedSheet().getRange("A2:I2499")],
+    '=$H2="Transfer"',
+    "#d9e7fd"
   );
   rules.push(transferCategoryRule);
 
