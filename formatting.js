@@ -97,7 +97,7 @@ function setupFormulae() {
   sheet.getRange("G1").setFormula(g1Formula);
 
   var h1Formula =
-    '={{"Parent Category", "Chld Category"}; splitCategoryRange($D2:$D)}';
+    '={{"Parent Category", "Child Category"}; splitCategoryRange($D2:$D)}';
   sheet.getRange("H1").setFormula(h1Formula);
 }
 
@@ -119,7 +119,7 @@ function recreateConditionalFormattingRules() {
   var sheet = getDataDigestedSheet();
   var rules = [];
 
-  // Consolodate using map --
+  // Consolidate using map --
   // see: https://chatgpt.com/c/9cc333b8-0808-4b27-b1f0-107a1b373bf6
   //   var ruleConfigs = [
   //     { range: "A2:I2499", formula: '=$G2="Income"', backgroundColor: "#e6efdb" },
@@ -192,7 +192,7 @@ function applyFormatting() {
   amountRange.setNumberFormat('"("#,##0.00")";(#,##0.00);#,##0.00');
 
   // Column Width
-  // account	postedOn	payee	category	tags	amount	Type	Parent Category	Chld Category
+  // account	postedOn	payee	category	tags	amount	Type	Parent Category	Child Category
   sheet.setColumnWidth(1, 70); // A:A - account
   sheet.setColumnWidth(2, 70); // B:B - postedOn
   sheet.setColumnWidth(3, 300); // C:C - payee
