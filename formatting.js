@@ -76,6 +76,16 @@ function setupMenus() {
     .addToUi();
 }
 
+function getDataDigestedSheet() {
+  var sheetName = "Data - Digested";
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  if (!sheet) {
+    console.log('${sheetName}" not found.');
+    return;
+  }
+  return sheet;
+}
+
 function setupDataDigestedSheet() {
   setupFormulae();
   applyFormatting();
@@ -91,6 +101,20 @@ function setupFormulae() {
   var h1Formula =
     '={{"Parent Category", "Chld Category"}; splitCategoryRange($D2:$D)}';
   sheet.getRange("H1").setFormula(h1Formula);
+}
+
+function newConditionalFormattingBuilderFactory(
+  ranges,
+  formula,
+  backgroundColor
+) {
+  // https://developers.google.com/apps-script/reference/spreadsheet/conditional-format-rule-builder
+  return SpreadsheetApp.newConditionalFormatRule()
+    .setRanges(ranges)
+    .whenFormulaSatisfied(formula)
+    .setFontColor(BLACK)
+    .setBackground(backgroundColor)
+    .setBold(false);
 }
 
 function recreateConditionalFormattingRules() {
@@ -132,39 +156,19 @@ function recreateConditionalFormattingRules() {
   sheet.setConditionalFormatRules(rules);
 }
 
-function newConditionalFormattingBuilderFactory(
-  ranges,
-  formula,
-  backgroundColor
-) {
-  // https://developers.google.com/apps-script/reference/spreadsheet/conditional-format-rule-builder
-  return SpreadsheetApp.newConditionalFormatRule()
-    .setRanges(ranges)
-    .whenFormulaSatisfied(formula)
-    .setFontColor(BLACK)
-    .setBackground(backgroundColor)
-    .setBold(false);
-}
-
-function getDataDigestedSheet() {
-  var sheetName = "Data - Digested";
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
-  if (!sheet) {
-    console.log('${sheetName}" not found.');
-    return;
-  }
-  return sheet;
+function newConditionalRule(ranges, formula, backgroundColor) {
+  return newConditionalFormattingBuilderFactory(
+    ranges,
+    formula,
+    backgroundColor
+  ).build();
 }
 
 function createIncomeConditionalFormattingRuleForIncome() {
   var ranges = [getDataDigestedSheet().getRange("A2:I2499")];
   var formula = '=$G2="Income"';
   var backgroundColor = "#e6efdb";
-  var rule = newConditionalFormattingBuilderFactory(
-    ranges,
-    formula,
-    backgroundColor
-  ).build();
+  var rule = newConditionalRule(ranges, formula, backgroundColor);
 
   return rule;
 }
@@ -173,11 +177,7 @@ function createConditionalFormattingRuleForTransferInColumnG() {
   var ranges = [getDataDigestedSheet().getRange("A2:I2499")];
   var formula = '=$G2="Transfer"';
   var backgroundColor = "#93CCEA";
-  var rule = newConditionalFormattingBuilderFactory(
-    ranges,
-    formula,
-    backgroundColor
-  ).build();
+  var rule = newConditionalRule(ranges, formula, backgroundColor);
 
   return rule;
 }
@@ -186,11 +186,7 @@ function createConditionalFormattingRuleForTransferInColumnH() {
   var ranges = [getDataDigestedSheet().getRange("A2:I2499")];
   var formula = '=$H2="Transfer"';
   var backgroundColor = "#d9e7fd";
-  var rule = newConditionalFormattingBuilderFactory(
-    ranges,
-    formula,
-    backgroundColor
-  ).build();
+  var rule = newConditionalRule(ranges, formula, backgroundColor);
 
   return rule;
 }
