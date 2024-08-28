@@ -1,5 +1,43 @@
 const BLACK = "#000000";
 
+function myOnOpen() {
+  setupMenus();
+  // fetchCsvDataFromDrive();
+  // applyFormatting();
+  // recreateChart();
+}
+
+function listTriggers() {
+  const triggers = ScriptApp.getProjectTriggers();
+  for (const trigger of triggers) {
+    console.log(
+      `Trigger ID: ${trigger.getUniqueId()}, Function: ${trigger.getHandlerFunction()}`
+    );
+  }
+}
+
+function deleteAllTriggers() {
+  const triggers = ScriptApp.getProjectTriggers();
+  const count = triggers.length;
+
+  for (const trigger of triggers) {
+    ScriptApp.deleteTrigger(trigger);
+  }
+
+  console.log(`${count} triggers have been deleted.`);
+}
+
+function setupTriggers() {
+  ScriptApp.newTrigger("myOnOpen")
+    .forSpreadsheet(SpreadsheetApp.getActiveSpreadsheet())
+    .onOpen()
+    .create();
+}
+
+function doNothing() {
+  // Do nothing!
+}
+
 function setupMenus() {
   var ui = SpreadsheetApp.getUi();
 
@@ -24,14 +62,16 @@ function setupMenus() {
     .addItem("1. setupFormulae", "setupFormulae")
     .addItem("0. setupDataDigestedSheet", "setupDataDigestedSheet")
     .addItem("-. setupMenus", "setupMenus")
+
     .addItem("----", "doNothing")
 
-    // .addItem("X - setupTriggers", "setupTriggers")
-    // .addItem("deleteAllTriggers", "deleteAllTriggers")
-    // .addItem("listTriggers", "listTriggers")
+    .addItem("X - setupTriggers", "setupTriggers")
+    .addItem("deleteAllTriggers", "deleteAllTriggers")
+    .addItem("listTriggers", "listTriggers")
 
-    // .addItem("----", "doNothing")
-    // .addItem("myOnOpen", "myOnOpen")
+    .addItem("----", "doNothing")
+
+    .addItem("myOnOpen", "myOnOpen")
 
     .addToUi();
 }
@@ -121,9 +161,9 @@ function createIncomeConditionalFormattingRuleForIncome() {
   var formula = '=$G2="Income"';
   var backgroundColor = "#e6efdb";
   var rule = newConditionalFormattingBuilderFactory(
-      ranges,
-      formula,
-      backgroundColor
+    ranges,
+    formula,
+    backgroundColor
   ).build();
 
   return rule;
@@ -134,9 +174,9 @@ function createConditionalFormattingRuleForTransferInColumnG() {
   var formula = '=$G2="Transfer"';
   var backgroundColor = "#93CCEA";
   var rule = newConditionalFormattingBuilderFactory(
-      ranges,
-      formula,
-      backgroundColor
+    ranges,
+    formula,
+    backgroundColor
   ).build();
 
   return rule;
@@ -147,9 +187,9 @@ function createConditionalFormattingRuleForTransferInColumnH() {
   var formula = '=$H2="Transfer"';
   var backgroundColor = "#d9e7fd";
   var rule = newConditionalFormattingBuilderFactory(
-      ranges,
-      formula,
-      backgroundColor
+    ranges,
+    formula,
+    backgroundColor
   ).build();
 
   return rule;
