@@ -1,3 +1,5 @@
+/// <reference types="google-apps-script" />
+
 const BLACK = "#000000";
 
 function myOnOpen() {
@@ -37,7 +39,7 @@ function doNothing() {
 }
 
 function setupMenus() {
-  var ui = SpreadsheetApp.getUi();
+  const ui = SpreadsheetApp.getUi();
 
   ui.createMenu("Custom Menu")
     .addItem(
@@ -75,8 +77,8 @@ function setupMenus() {
 }
 
 function getDataDigestedSheet() {
-  var sheetName = "Data - Digested";
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  const sheetName = "Data - Digested";
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   if (!sheet) {
     console.log('${sheetName}" not found.');
     return;
@@ -91,13 +93,13 @@ function setupDataDigestedSheet() {
 }
 
 function setupFormulae() {
-  var sheet = getDataDigestedSheet();
+  const sheet = getDataDigestedSheet();
 
-  var g1Formula = '={ "Type"; Transaction_Types($A2:$A, H2:H) }';
+  const g1Formula = '={ "Type"; Transaction_Types($A2:$A, H2:H) }';
   sheet.getRange("G1").setFormula(g1Formula);
 
-  var h1Formula =
-    '={{"Parent Category", "Child Category"}; splitCategoryRange($D2:$D)}';
+  const h1Formula =
+      '={{"Parent Category", "Child Category"}; splitCategoryRange($D2:$D)}';
   sheet.getRange("H1").setFormula(h1Formula);
 }
 
@@ -116,8 +118,8 @@ function newConditionalFormattingBuilderFactory(
 }
 
 function recreateConditionalFormattingRules() {
-  var sheet = getDataDigestedSheet();
-  var rules = [];
+  const sheet = getDataDigestedSheet();
+  const rules = [];
 
   // Consolidate using map --
   // see: https://chatgpt.com/c/9cc333b8-0808-4b27-b1f0-107a1b373bf6
@@ -142,24 +144,24 @@ function recreateConditionalFormattingRules() {
   //   backgroundColor
   // );
 
-  var incomeRule = newConditionalFormattingRule(
-    [getDataDigestedSheet().getRange("A2:I2499")],
-    '=$G2="Income"',
-    "#e6efdb"
+  const incomeRule = newConditionalFormattingRule(
+      [getDataDigestedSheet().getRange("A2:I2499")],
+      '=$G2="Income"',
+      "#e6efdb"
   );
   rules.push(incomeRule);
 
-  var transferTypeRule = newConditionalFormattingRule(
-    [getDataDigestedSheet().getRange("A2:I2499")],
-    '=$G2="Transfer"',
-    "#93CCEA"
+  const transferTypeRule = newConditionalFormattingRule(
+      [getDataDigestedSheet().getRange("A2:I2499")],
+      '=$G2="Transfer"',
+      "#93CCEA"
   );
   rules.push(transferTypeRule);
 
-  var transferCategoryRule = newConditionalFormattingRule(
-    [getDataDigestedSheet().getRange("A2:I2499")],
-    '=$H2="Transfer"',
-    "#d9e7fd"
+  const transferCategoryRule = newConditionalFormattingRule(
+      [getDataDigestedSheet().getRange("A2:I2499")],
+      '=$H2="Transfer"',
+      "#d9e7fd"
   );
   rules.push(transferCategoryRule);
 
@@ -174,8 +176,8 @@ function newConditionalFormattingRule(ranges, formula, backgroundColor) {
   ).build();
 }
 function applyFormatting() {
-  var sheetName = "Data - Digested";
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  const sheetName = "Data - Digested";
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   if (!sheet) {
     console.log('${sheetName}" not found.');
     return;
@@ -188,7 +190,7 @@ function applyFormatting() {
   sheet.getRange("1:1").setFontWeight("bold");
 
   // Number Format
-  var amountRange = sheet.getRange("F2:F");
+  const amountRange = sheet.getRange("F2:F");
   amountRange.setNumberFormat('"("#,##0.00")";(#,##0.00);#,##0.00');
 
   // Column Width
