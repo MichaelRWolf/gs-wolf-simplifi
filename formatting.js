@@ -2,9 +2,7 @@ const BLACK = "#000000";
 
 function myOnOpen() {
   setupMenus();
-  // fetchCsvDataFromDrive();
-  // applyFormatting();
-  // recreateChart();
+  setupDataDigestedSheet();
 }
 
 function listTriggers() {
