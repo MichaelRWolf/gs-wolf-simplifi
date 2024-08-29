@@ -1,7 +1,13 @@
 #! /bin/bash
 # apps_script_url=" https://script.google.com/u/0/home/projects/1vZxhYsPWTTxwmvf-x7p6MnI8LWzNkNRQIhkPvTblaZ9yNQ1CR4bOamMB/edit"
-# google_sheet_url="https://docs.google.com/spreadsheets/d/13osRy0mj4zq8cSxxxmjy6RECt3ZOTCPY385EPWaE_9k/edit?gid=1122782446#gid=1122782446"
 
-google_sheet_url="https://docs.google.com/spreadsheets/d/13osRy0mj4zq8cSxxxmjy6RECt3ZOTCPY385EPWaE_9k/edit?gid=0#gid=0"
+pivot_tables_tab_url="https://docs.google.com/spreadsheets/d/13osRy0mj4zq8cSxxxmjy6RECt3ZOTCPY385EPWaE_9k/edit?gid=1122782446#gid=1122782446"
+
+data_digested_tab_url="https://docs.google.com/spreadsheets/d/13osRy0mj4zq8cSxxxmjy6RECt3ZOTCPY385EPWaE_9k/edit?gid=0#gid=0"
+
+google_sheet_url="${data_digested_tab_url:?}"
+google_sheet_url="${pivot_tables_tab_url:?}"
+
+
 clasp push && 
-    open "${google_sheet_url}"
+    open "${google_sheet_url:?}"
