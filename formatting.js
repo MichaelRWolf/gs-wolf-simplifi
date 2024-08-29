@@ -242,38 +242,48 @@ function applyFormattingToPivotTablesTab() {
   sheet.getRange("1:1").setFontWeight("bold");
 
   // Number Format
+  const numberAccountingFormat = "#,##0;(#,##0);0";
+
   const amountRange = sheet.getRange("E2:E");
-  amountRange.setNumberFormat("#,##0;(#,##0);0");
+  amountRange.setNumberFormat(numberAccountingFormat);
 
-  function setColumnWidthsXXX(sheet) {
-    // var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const numberFormat = {
+    "SUM of amount": numberAccountingFormat,
+    amount: numberAccountingFormat,
+  };
+  // Get the headers from the first row
+  const headers = sheet.getRange("1:1").getValues()[0];
 
-    // Get the headers from the first row
-    const headers = sheet.getRange("1:1").getValues()[0]; // Fetch the first row as an array
+  // Column Width
+  const columnWidth = {
+    Type: 50,
+    account: 100,
+    "SUM of amount": 75,
+    payee: 300,
+    amount: 75,
+    category: 300,
+    "Parent Category": 300,
+    "Child Category": 200,
+  };
 
-    // Define column widths for each header
-    const columnWidths = {
-      Type: 50,
-      "Parent Category": 300,
-      "Child Category": 200,
-      payee: 300,
-      "SUM of amount": 75,
-      amount: 75,
-    };
+  headers.forEach(function (header, index) {
+    const columnNumber = index + 1;
 
-    // Loop through each header and set the column width accordingly
-    headers.forEach(function (header, index) {
-      const columnNumber = index + 1;
-      const width = columnWidths[header];
+    const width = columnWidth[header];
+    if (width) {
       console.log(`Setting column ${columnNumber} width to ${width}`);
+      sheet.setColumnWidth(columnNumber, width); // Set the column width based on header lookup
+    }
 
-      if (width) {
-        sheet.setColumnWidth(columnNumber, width); // Set the column width based on header lookup
-      }
-    });
-  }
-
-  setColumnWidthsXXX(sheet);
+    const format = numberFormat[header];
+    if (format) {
+      const rangeString = `${columnNumber}2:${columnNumber}`;
+      console.log(`Setting column ${columnNumber} numberFormat to ${format}`);
+      sheet
+        .getRange(2, columnNumber, sheet.getLastRow())
+        .setNumberFormat(format);
+    }
+  });
 
   // Show & Hide
   // sheet.showColumns(1, sheet.getMaxColumns());
