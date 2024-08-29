@@ -262,8 +262,8 @@ function applyFormattingToPivotTablesTab() {
     payee: 300,
     amount: 75,
     category: 300,
-    "Parent Category": 300,
-    "Child Category": 200,
+    "Parent Category": 300 * 0.8,
+    "Child Category": 200 * 0.8,
   };
 
   headers.forEach(function (header, index) {
