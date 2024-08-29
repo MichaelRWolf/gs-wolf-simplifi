@@ -89,7 +89,7 @@ function getDataDigestedSheet() {
   const sheetName = "Data - Digested";
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   if (!sheet) {
-    console.log('${sheetName}" not found.');
+    console.log(`${sheetName}" not found.`);
     return;
   }
   return sheet;
@@ -193,10 +193,10 @@ function applyFormattingToDataDigestedTab() {
   const sheetName = "Data - Digested";
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   if (!sheet) {
-    console.log('${sheetName}" not found.');
+    console.log(`${sheetName}" not found.`);
     return;
   }
-  console.log("Formatting ${sheetName}");
+  console.log(`Formatting sheet:  ${sheetName}`);
 
   // Frozen & Bold
   sheet.setFrozenRows(1);
@@ -225,17 +225,17 @@ function applyFormattingToDataDigestedTab() {
   sheet.hideColumns(5);
   // sheet.hideColumns(7);
 
-  console.log("Formatting ${sheetName}...done");
+  console.log(`Formatting sheet:  ${sheetName}...done`);
 }
 
 function applyFormattingToPivotTablesTab() {
   const sheetName = "Pivot Tables";
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   if (!sheet) {
-    console.log('${sheetName}" not found.');
+    console.log(`${sheetName}" not found.`);
     return;
   }
-  console.log("Formatting ${sheetName}");
+  console.log(`Formatting sheet:  ${sheetName}`);
 
   // Frozen & Bold
   sheet.setFrozenRows(1);
@@ -271,14 +271,17 @@ function applyFormattingToPivotTablesTab() {
 
     const width = columnWidth[header];
     if (width) {
-      console.log(`Setting column ${columnNumber} width to ${width}`);
+      console.log(
+        `Setting '${header}' (${columnNumber}) columnWidth to ${width}`
+      );
       sheet.setColumnWidth(columnNumber, width); // Set the column width based on header lookup
     }
 
     const format = numberFormat[header];
     if (format) {
-      const rangeString = `${columnNumber}2:${columnNumber}`;
-      console.log(`Setting column ${columnNumber} numberFormat to ${format}`);
+      console.log(
+        `Setting '${header}' (${columnNumber}) numberFormat to ${format}`
+      );
       sheet
         .getRange(2, columnNumber, sheet.getLastRow())
         .setNumberFormat(format);
@@ -291,7 +294,7 @@ function applyFormattingToPivotTablesTab() {
   // sheet.hideColumns(5);
   // sheet.hideColumns(7);
 
-  console.log("Formatting ${sheetName}...done");
+  console.log(`Formatting sheet:  ${sheetName}...done`);
 }
 
 function applyFormatting() {
