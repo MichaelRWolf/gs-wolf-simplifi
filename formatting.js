@@ -58,6 +58,15 @@ function setupMenus() {
       "3. recreateConditionalFormattingRules",
       "recreateConditionalFormattingRules"
     )
+    .addItem(
+      "2.2 applyFormattingToDataDigestedTab",
+      "applyFormattingToDataDigestedTab"
+    )
+    .addItem(
+      "2.1 applyFormattingToPivotTablesTab",
+      "applyFormattingToPivotTablesTab"
+    )
+
     .addItem("2. applyFormatting", "applyFormatting")
     .addItem("1. setupFormulae", "setupFormulae")
     .addItem("0. setupDataDigestedSheet", "setupDataDigestedSheet")
@@ -179,7 +188,8 @@ function newConditionalFormattingRule(ranges, formula, backgroundColor) {
     backgroundColor
   ).build();
 }
-function applyFormatting() {
+
+function applyFormattingToDataDigestedTab() {
   const sheetName = "Data - Digested";
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   if (!sheet) {
@@ -216,4 +226,65 @@ function applyFormatting() {
   // sheet.hideColumns(7);
 
   console.log("Formatting ${sheetName}...done");
+}
+
+function applyFormattingToPivotTablesTab() {
+  const sheetName = "Pivot Tables";
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  if (!sheet) {
+    console.log('${sheetName}" not found.');
+    return;
+  }
+  console.log("Formatting ${sheetName}");
+
+  // Frozen & Bold
+  sheet.setFrozenRows(1);
+  sheet.getRange("1:1").setFontWeight("bold");
+
+  // Number Format
+  const amountRange = sheet.getRange("E2:E");
+  amountRange.setNumberFormat("#,##0;(#,##0);0");
+
+  function setColumnWidthsXXX(sheet) {
+    // var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+    // Get the headers from the first row
+    const headers = sheet.getRange("1:1").getValues()[0]; // Fetch the first row as an array
+
+    // Define column widths for each header
+    const columnWidths = {
+      Type: 50,
+      "Parent Category": 300,
+      "Child Category": 200,
+      payee: 300,
+      "SUM of amount": 75,
+      amount: 75,
+    };
+
+    // Loop through each header and set the column width accordingly
+    headers.forEach(function (header, index) {
+      const columnNumber = index + 1;
+      const width = columnWidths[header];
+      console.log(`Setting column ${columnNumber} width to ${width}`);
+
+      if (width) {
+        sheet.setColumnWidth(columnNumber, width); // Set the column width based on header lookup
+      }
+    });
+  }
+
+  setColumnWidthsXXX(sheet);
+
+  // Show & Hide
+  // sheet.showColumns(1, sheet.getMaxColumns());
+  // sheet.hideColumns(4);
+  // sheet.hideColumns(5);
+  // sheet.hideColumns(7);
+
+  console.log("Formatting ${sheetName}...done");
+}
+
+function applyFormatting() {
+  applyFormattingToDataDigestedTab();
+  applyFormattingToPivotTablesTab();
 }
