@@ -115,11 +115,12 @@ function setupFormulae() {
     '={{"Parent Category", "Child Category"}; splitCategoryRange($D2:$D)}';
   sheet.getRange("H1").setFormula(h1Formula);
 
-  const j1Formula = '={"YYYY"; arrayformula(TEXT($B$2:$B, "yyyy"))}';
+  const j1Formula =
+    '={"YYYY"; ARRAYFORMULA(IF(ISBLANK($B$2:$B), "", TEXT($B$2:$B, "yyyy")))}';
   sheet.getRange("J1").setFormula(j1Formula);
 
   const k1Formula =
-    '={"YYYY-Qn"; arrayformula(TEXT($B$2:$B, "yyyy") & "-Q" & ROUNDUP(MONTH($B$2:$B)/3, 0))}';
+    '={"YYYY-Qn"; ARRAYFORMULA(IF(ISBLANK($B$2:$B), "", TEXT($B$2:$B, "yyyy") & "-Q" & ROUNDUP(MONTH($B$2:$B)/3, 0)))}';
   sheet.getRange("K1").setFormula(k1Formula);
 }
 
@@ -245,32 +246,43 @@ function applyFormattingToPivotTablesTab() {
   console.log(`Formatting sheet:  ${sheetName}`);
 
   // Frozen & Bold
-  sheet.setFrozenRows(1);
-  sheet.getRange("1:1").setFontWeight("bold");
+  sheet.setFrozenRows(2);
+  sheet.getRange("1:2").setFontWeight("bold");
 
   // Number Format
   const numberAccountingFormat = "#,##0;(#,##0);0";
 
-  const amountRange = sheet.getRange("E2:E");
-  amountRange.setNumberFormat(numberAccountingFormat);
+  // const amountRange = sheet.getRange("E3:E");
+  // amountRange.setNumberFormat(numberAccountingFormat);
 
   const numberFormat = {
+    "Grand Total": numberAccountingFormat,
     "SUM of amount": numberAccountingFormat,
+    1899: numberAccountingFormat,
+    2022: numberAccountingFormat,
+    2023: numberAccountingFormat,
+    2024: numberAccountingFormat,
     amount: numberAccountingFormat,
   };
-  // Get the headers from the first row
-  const headers = sheet.getRange("1:1").getValues()[0];
+  // Get the headers
+  const headers = sheet.getRange("2:2").getValues()[0];
 
   // Column Width
   const columnWidth = {
     Type: 50,
     account: 100,
-    "SUM of amount": 75,
     payee: 300,
-    amount: 75,
     category: 300,
     "Parent Category": 300 * 0.8,
     "Child Category": 200 * 0.8,
+
+    amount: 75,
+    2024: 75,
+    2023: 75,
+    2022: 75,
+    1899: 75,
+    "SUM of amount": 75,
+    "Grand Total": 75,
   };
 
   headers.forEach(function (header, index) {
@@ -290,7 +302,7 @@ function applyFormattingToPivotTablesTab() {
         `Setting '${header}' (${columnNumber}) numberFormat to ${format}`
       );
       sheet
-        .getRange(2, columnNumber, sheet.getLastRow())
+        .getRange(3, columnNumber, sheet.getLastRow())
         .setNumberFormat(format);
     }
   });
