@@ -1,25 +1,57 @@
-function splitCategory(categoryString) {
-  // if (typeof categoryString !== "string" || categoryString.length === 0) {
-  //   return ["", ""];
-  // }
+// function splitCategory(categoryString) {
+//   // if (typeof categoryString !== "string" || categoryString.length === 0) {
+//   //   return ["", ""];
+//   // }
 
-  try {
-    var parts = categoryString.split(":");
-    return [parts[0] || "", parts[1] || ""];
-  } catch (e) {
-    console.log("splitCategory could not split ${categoryString}");
-    return ["", ""];
-  }
-}
+//   try {
+//     var parts = categoryString.split(":");
+//     return [parts[0] || "", parts[1] || ""];
+//   } catch (e) {
+//     console.log("splitCategory could not split ${categoryString}");
+//     return ["", ""];
+//   }
+// }
 
 /**
+ * Splits a category string into two parts based on the ':' delimiter.
+ * Returns an array with two elements, defaulting to empty strings if parts are missing.
+ *
+ * @param {string} categoryString - The string to split.
+ * @return {Array} - An array with the split category components.
+ */
+function splitCategory(categoryString) {
+  if (typeof categoryString !== "string" || categoryString.length === 0) {
+    return ["", ""];
+  }
+
+  // Split the string once and handle undefined parts with defaults
+  var parts = categoryString.split(":");
+  return [parts[0] || "", parts[1] || ""];
+}
+
+// /**
+//  * @param {Array} range - A 2D array of category strings.
+//  * @return {Array} - A 2D array where each row contains the split results.
+//  * @customfunction
+//  */
+// function splitCategoryRange(range) {
+//   return range.map(function(row) {
+//     var categoryString = row[0]; // Access the first cell in the row
+//     return splitCategory(categoryString);
+//   });
+// }
+/**
+ * Processes a range of category strings, splitting each string into components.
+ *
  * @param {Array} range - A 2D array of category strings.
  * @return {Array} - A 2D array where each row contains the split results.
  * @customfunction
  */
 function splitCategoryRange(range) {
-  return range.map(function(row) {
-    var categoryString = row[0]; // Access the first cell in the row
+  // Use flatMap if you are certain there will always be rows with data,
+  // else map might be more appropriate if empty rows are a possibility.
+  return range.map((row) => {
+    var categoryString = row[0] || ""; // Handle undefined or empty values safely
     return splitCategory(categoryString);
   });
 }
@@ -33,6 +65,19 @@ function splitCategoryRange(range) {
 //   return splitCategoryRange(range);
 // }
 
+let accountNames = null;
+function initializeAccountNames() {
+  if (!accountNames) {
+    // Access the 'Account Names' sheet
+    var accountNamesSheet =
+      SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Account Names");
+    var accountNamesValues = accountNamesSheet.getRange("A:A").getValues();
+
+    // Flatten the 2D array into a 1D array and filter out empty strings
+    accountNames = accountNamesValues.flat().filter(String);
+  }
+}
+
 /**
  * Custom function to determine the transaction type based on the category.
  *
@@ -41,13 +86,7 @@ function splitCategoryRange(range) {
  * @customfunction
  */
 function Transaction_Type(account, category) {
-  // Access the 'Account Names' sheet
-  var sheet =
-    SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Account Names");
-  var accountNames = sheet.getRange("A:A").getValues();
-
-  // Flatten the 2D array into a 1D array and filter out empty strings
-  accountNames = accountNames.flat().filter(String);
+  initializeAccountNames();
 
   if (account === "" && category !== "") {
     return "Orphan";
