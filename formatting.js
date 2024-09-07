@@ -96,10 +96,12 @@ function checkTransfersBalance() {
   var accountIndex = headers.indexOf("account");
   var categoryIndex = headers.indexOf("category");
   var amountIndex = headers.indexOf("amount");
+  var postedOnIndex = headers.indexOf("postedOn");
   var typeIndex = headers.indexOf("Type");
 
   var transfers = data.filter((row) => row[typeIndex] === "Transfer"); // Filter transfers
   var unmatchedTransfers = [];
+  var matchingTransfers = [];
 
   // Create a map to track matched transactions
   var transferMap = {};
@@ -108,6 +110,7 @@ function checkTransfersBalance() {
     var account = row[accountIndex];
     var category = row[categoryIndex];
     var amount = row[amountIndex];
+    var postedOn = row[postedOnIndex];
 
     // Create unique key for the transfer
     var key = `${account}-${category}-${Math.abs(amount)}`;
@@ -117,6 +120,18 @@ function checkTransfersBalance() {
 
     if (transferMap[reverseKey]) {
       // If the reverse transaction is already recorded, remove it as it's balanced
+      var matchedRow = transferMap[reverseKey];
+      var matchingTransfer = [
+        matchedRow[accountIndex],
+        matchedRow[categoryIndex],
+        matchedRow[amountIndex],
+        matchedRow[postedOnIndex],
+      ];
+      matchingTransfers.push(matchingTransfer);
+
+      // Add the current row as the reverse match as well
+      matchingTransfers.push([account, category, amount, postedOn]);
+
       delete transferMap[reverseKey];
     } else {
       // Add the current transaction to the map
@@ -137,6 +152,37 @@ function checkTransfersBalance() {
     });
   } else {
     Logger.log("All transfers are balanced.");
+  }
+  updateTransfersSheet(matchingTransfers, [
+    "account",
+    "category",
+    "amount",
+    "postedOn",
+  ]);
+}
+
+/**
+ * Updates the 'Transfers' sheet with matching transfers data.
+ * Clears existing data and populates with new data.
+ *
+ * @param {Array} matchingTransfers - List of matched transfer records.
+ * @param {Array} headers - Headers of the main data set.
+ */
+function updateTransfersSheet(matchingTransfers, headers) {
+  var transferSheet =
+    SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Transfers");
+
+  // Clear existing data
+  transferSheet.clear();
+
+  // Set headers for the Transfers sheet
+  transferSheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+
+  // If there are matching transfers, set the data in the sheet
+  if (matchingTransfers.length > 0) {
+    transferSheet
+      .getRange(2, 1, matchingTransfers.length, headers.length)
+      .setValues(matchingTransfers);
   }
 }
 
