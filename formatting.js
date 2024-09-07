@@ -103,6 +103,8 @@ function checkTransfersBalance() {
   var unmatchedTransfers = [];
   var matchingTransfers = [];
 
+  let matchingTransferId = 0;
+
   // Create a map to track matched transactions
   var transferMap = {};
 
@@ -119,9 +121,11 @@ function checkTransfersBalance() {
     var reverseKey = `${category}-${account}-${Math.abs(amount)}`;
 
     if (transferMap[reverseKey]) {
+      matchingTransferId++;
       // If the reverse transaction is already recorded, remove it as it's balanced
       var matchedRow = transferMap[reverseKey];
       var matchingTransfer = [
+        matchingTransferId,
         matchedRow[accountIndex],
         matchedRow[categoryIndex],
         matchedRow[amountIndex],
@@ -130,7 +134,13 @@ function checkTransfersBalance() {
       matchingTransfers.push(matchingTransfer);
 
       // Add the current row as the reverse match as well
-      matchingTransfers.push([account, category, amount, postedOn]);
+      matchingTransfers.push([
+        matchingTransferId,
+        account,
+        category,
+        amount,
+        postedOn,
+      ]);
 
       delete transferMap[reverseKey];
     } else {
@@ -149,11 +159,19 @@ function checkTransfersBalance() {
       Logger.log(
         `Account: ${transfer[accountIndex]}, Category: ${transfer[categoryIndex]}, Amount: ${transfer[amountIndex]}`
       );
+      matchingTransfers.push([
+        "",
+        transfer[accountIndex],
+        transfer[categoryIndex],
+        transfer[amountIndex],
+        transfer[postedOnIndex],
+      ]);
     });
   } else {
     Logger.log("All transfers are balanced.");
   }
   updateTransfersSheet(matchingTransfers, [
+    "ID",
     "account",
     "category",
     "amount",
