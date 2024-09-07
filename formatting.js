@@ -157,7 +157,7 @@ function checkTransfersBalance() {
     Logger.log("Unmatched or Unbalanced Transfers:");
     unmatchedTransfers.forEach((transfer) => {
       Logger.log(
-        `Account: ${transfer[accountIndex]}, Category: ${transfer[categoryIndex]}, Amount: ${transfer[amountIndex]}`
+        `Account: ${transfer[accountIndex]}, Category: ${transfer[categoryIndex]}, Amount: ${transfer[amountIndex]}, postedOn: ${transfer[postedOnIndex]}`
       );
       matchingTransfers.push([
         "",
