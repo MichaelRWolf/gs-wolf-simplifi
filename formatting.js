@@ -114,6 +114,13 @@ function setupFormulae() {
   const h1Formula =
     '={{"Parent Category", "Child Category"}; splitCategoryRange($D2:$D)}';
   sheet.getRange("H1").setFormula(h1Formula);
+
+  const j1Formula = '={"YYYY"; arrayformula(TEXT($B$2:$B, "yyyy"))}';
+  sheet.getRange("J1").setFormula(j1Formula);
+
+  const k1Formula =
+    '={"YYYY-Qn"; arrayformula(TEXT($B$2:$B, "yyyy") & "-Q" & ROUNDUP(MONTH($B$2:$B)/3, 0))}';
+  sheet.getRange("K1").setFormula(k1Formula);
 }
 
 function newConditionalFormattingBuilderFactory(
