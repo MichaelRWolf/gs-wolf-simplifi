@@ -42,6 +42,9 @@ function setupMenus() {
   const ui = SpreadsheetApp.getUi();
 
   ui.createMenu("Custom Menu")
+
+    .addItem("4. checkTransfersBalance", "checkTransfersBalance")
+
     .addItem(
       "3.c createConditionalFormattingRuleForTransferInColumnH",
       "createConditionalFormattingRuleForTransferInColumnH"
@@ -83,6 +86,58 @@ function setupMenus() {
     .addItem("myOnOpen", "myOnOpen")
 
     .addToUi();
+}
+
+function checkTransfersBalance() {
+  var sheet = getDataDigestedSheet();
+  var data = sheet.getDataRange().getValues();
+  var headers = data.shift();
+
+  var accountIndex = headers.indexOf("account");
+  var categoryIndex = headers.indexOf("category");
+  var amountIndex = headers.indexOf("amount");
+  var typeIndex = headers.indexOf("Type");
+
+  var transfers = data.filter((row) => row[typeIndex] === "Transfer"); // Filter transfers
+  var unmatchedTransfers = [];
+
+  // Create a map to track matched transactions
+  var transferMap = {};
+
+  transfers.forEach((row) => {
+    var account = row[accountIndex];
+    var category = row[categoryIndex];
+    var amount = row[amountIndex];
+
+    // Create unique key for the transfer
+    var key = `${account}-${category}-${Math.abs(amount)}`;
+
+    // Create reverse key for finding the opposite transaction
+    var reverseKey = `${category}-${account}-${Math.abs(amount)}`;
+
+    if (transferMap[reverseKey]) {
+      // If the reverse transaction is already recorded, remove it as it's balanced
+      delete transferMap[reverseKey];
+    } else {
+      // Add the current transaction to the map
+      transferMap[key] = row;
+    }
+  });
+
+  // Any remaining transactions in transferMap are unbalanced or unmatched
+  unmatchedTransfers = Object.values(transferMap);
+
+  // Create the report
+  if (unmatchedTransfers.length > 0) {
+    Logger.log("Unmatched or Unbalanced Transfers:");
+    unmatchedTransfers.forEach((transfer) => {
+      Logger.log(
+        `Account: ${transfer[accountIndex]}, Category: ${transfer[categoryIndex]}, Amount: ${transfer[amountIndex]}`
+      );
+    });
+  } else {
+    Logger.log("All transfers are balanced.");
+  }
 }
 
 function getDataDigestedSheet() {
@@ -256,6 +311,7 @@ function applyFormattingToPivotTablesTab() {
   // amountRange.setNumberFormat(numberAccountingFormat);
 
   const numberFormat = {
+    "": numberAccountingFormat,
     "Grand Total": numberAccountingFormat,
     "SUM of amount": numberAccountingFormat,
     1899: numberAccountingFormat,
@@ -276,13 +332,14 @@ function applyFormattingToPivotTablesTab() {
     "Parent Category": 300 * 0.8,
     "Child Category": 200 * 0.8,
 
-    amount: 75,
-    2024: 75,
-    2023: 75,
-    2022: 75,
-    1899: 75,
-    "SUM of amount": 75,
+    "": 75,
     "Grand Total": 75,
+    "SUM of amount": 75,
+    1899: 75,
+    2022: 75,
+    2023: 75,
+    2024: 75,
+    amount: 75,
   };
 
   headers.forEach(function (header, index) {
