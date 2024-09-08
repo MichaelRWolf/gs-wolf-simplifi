@@ -113,34 +113,38 @@ function checkTransfersBalance() {
     var category = row[categoryIndex];
     var amount = row[amountIndex];
     var postedOn = row[postedOnIndex];
-
-    // Create unique key for the transfer
     var key = `${account}-${category}-${Math.abs(amount)}`;
-
-    // Create reverse key for finding the opposite transaction
     var reverseKey = `${category}-${account}-${Math.abs(amount)}`;
 
     if (transferMap[reverseKey]) {
-      matchingTransferId++;
-      // If the reverse transaction is already recorded, remove it as it's balanced
       var matchedRow = transferMap[reverseKey];
+      var matchedAccount = matchedRow[accountIndex];
+      var matchedCategory = matchedRow[categoryIndex];
+      var matchedAmount = matchedRow[amountIndex];
+      var matchedPostedOn = matchedRow[postedOnIndex];
+
+      matchingTransferId++;
+
+      const TOLERANCE = 1e-6;
+      let difference = Math.abs(amount + matchedAmount);
+
+      // Use ternary operator and strict equality check
+      let transferId =
+        difference < TOLERANCE ? matchingTransferId : -matchingTransferId;
+
+      // Transfer from this row...
+      var transfer = [transferId, account, category, amount, postedOn];
+      matchingTransfers.push(transfer);
+
+      // Transfer previously entered in map...
       var matchingTransfer = [
-        matchingTransferId,
-        matchedRow[accountIndex],
-        matchedRow[categoryIndex],
-        matchedRow[amountIndex],
-        matchedRow[postedOnIndex],
+        transferId,
+        matchedAccount,
+        matchedCategory,
+        matchedAmount,
+        matchedPostedOn,
       ];
       matchingTransfers.push(matchingTransfer);
-
-      // Add the current row as the reverse match as well
-      matchingTransfers.push([
-        matchingTransferId,
-        account,
-        category,
-        amount,
-        postedOn,
-      ]);
 
       delete transferMap[reverseKey];
     } else {
@@ -150,14 +154,15 @@ function checkTransfersBalance() {
   });
 
   // Any remaining transactions in transferMap are unbalanced or unmatched
+
   unmatchedTransfers = Object.values(transferMap);
 
   // Create the report
   if (unmatchedTransfers.length > 0) {
     Logger.log("Unmatched or Unbalanced Transfers:");
-    unmatchedTransfers.forEach((transfer) => {
+    Object.entries(transferMap).forEach(([key, transfer]) => {
       Logger.log(
-        `Account: ${transfer[accountIndex]}, Category: ${transfer[categoryIndex]}, Amount: ${transfer[amountIndex]}, postedOn: ${transfer[postedOnIndex]}`
+        `key: ${key}, Account: ${transfer[accountIndex]}, Category: ${transfer[categoryIndex]}, Amount: ${transfer[amountIndex]}, postedOn: ${transfer[postedOnIndex]}`
       );
       matchingTransfers.push([
         "",
@@ -171,7 +176,7 @@ function checkTransfersBalance() {
     Logger.log("All transfers are balanced.");
   }
   updateTransfersSheet(matchingTransfers, [
-    "ID",
+    "transferId",
     "account",
     "category",
     "amount",
