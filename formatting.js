@@ -100,7 +100,7 @@ function checkTransfersBalance() {
   var typeIndex = headers.indexOf("Type");
 
   var transfers = data.filter((row) => row[typeIndex] === "Transfer"); // Filter transfers
-  var unmatchedTransfers = [];
+  var unmatchedTransfers;
   var matchingTransfers = [];
 
   let matchingTransferId = 0;
@@ -232,7 +232,7 @@ function setupFormulae() {
     "=query('Data - Raw'!A:J,\"Select B, D, E, G, H, J order by D DESC, B, E, J\", 1)";
   sheet.getRange("A1").setFormula(a1Formula);
 
-  const g1Formula = '={ "Type"; Transaction_Types($A2:$A, H2:H) }';
+  const g1Formula = '={ "Type"; Transaction_Types($A2:$A, $H2:$H) }';
   sheet.getRange("G1").setFormula(g1Formula);
 
   const h1Formula =
