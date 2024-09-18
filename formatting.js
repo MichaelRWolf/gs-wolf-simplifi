@@ -89,39 +89,39 @@ function setupMenus() {
 }
 
 function checkTransfersBalance() {
-  var sheet = getDataDigestedSheet();
-  var data = sheet.getDataRange().getValues();
-  var headers = data.shift();
+  const sheet = getDataDigestedSheet();
+  const data = sheet.getDataRange().getValues();
+  const headers = data.shift();
 
-  var accountIndex = headers.indexOf("account");
-  var categoryIndex = headers.indexOf("category");
-  var amountIndex = headers.indexOf("amount");
-  var postedOnIndex = headers.indexOf("postedOn");
-  var typeIndex = headers.indexOf("Type");
+  const accountIndex = headers.indexOf("account");
+  const categoryIndex = headers.indexOf("category");
+  const amountIndex = headers.indexOf("amount");
+  const postedOnIndex = headers.indexOf("postedOn");
+  const typeIndex = headers.indexOf("Type");
 
-  var transfers = data.filter((row) => row[typeIndex] === "Transfer"); // Filter transfers
-  var unmatchedTransfers;
-  var matchingTransfers = [];
+  const transfers = data.filter((row) => row[typeIndex] === "Transfer"); // Filter transfers
+  let unmatchedTransfers;
+  const matchingTransfers = [];
 
   let matchingTransferId = 0;
 
   // Create a map to track matched transactions
-  var transferMap = {};
+  const transferMap = {};
 
   transfers.forEach((row) => {
-    var account = row[accountIndex];
-    var category = row[categoryIndex];
-    var amount = row[amountIndex];
-    var postedOn = row[postedOnIndex];
-    var key = `${account}-${category}-${Math.abs(amount)}`;
-    var reverseKey = `${category}-${account}-${Math.abs(amount)}`;
+    const account = row[accountIndex];
+    const category = row[categoryIndex];
+    const amount = row[amountIndex];
+    const postedOn = row[postedOnIndex];
+    const key = `${account}-${category}-${Math.abs(amount)}`;
+    const reverseKey = `${category}-${account}-${Math.abs(amount)}`;
 
     if (transferMap[reverseKey]) {
-      var matchedRow = transferMap[reverseKey];
-      var matchedAccount = matchedRow[accountIndex];
-      var matchedCategory = matchedRow[categoryIndex];
-      var matchedAmount = matchedRow[amountIndex];
-      var matchedPostedOn = matchedRow[postedOnIndex];
+      const matchedRow = transferMap[reverseKey];
+      const matchedAccount = matchedRow[accountIndex];
+      const matchedCategory = matchedRow[categoryIndex];
+      const matchedAmount = matchedRow[amountIndex];
+      const matchedPostedOn = matchedRow[postedOnIndex];
 
       matchingTransferId++;
 
@@ -133,11 +133,11 @@ function checkTransfersBalance() {
         difference < TOLERANCE ? matchingTransferId : -matchingTransferId;
 
       // Transfer from this row...
-      var transfer = [transferId, account, category, amount, postedOn];
+      const transfer = [transferId, account, category, amount, postedOn];
       matchingTransfers.push(transfer);
 
       // Transfer previously entered in map...
-      var matchingTransfer = [
+      const matchingTransfer = [
         transferId,
         matchedAccount,
         matchedCategory,
@@ -192,7 +192,7 @@ function checkTransfersBalance() {
  * @param {Array} headers - Headers of the main data set.
  */
 function updateTransfersSheet(matchingTransfers, headers) {
-  var transferSheet =
+  const transferSheet =
     SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Transfers");
 
   // Clear existing data
