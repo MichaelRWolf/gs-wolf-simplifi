@@ -34,6 +34,16 @@ function setupTriggers() {
     .create();
 }
 
+// function removeTrailingBlankRows(sheet) {
+//   const lastRow = sheet.getLastRow();  // Find the last row with data
+//   const maxRows = sheet.getMaxRows();  // Get the total number of rows in the sheet
+//
+//   // Only delete rows if there are rows beyond the last data row
+//   if (maxRows > lastRow) {
+//     sheet.deleteRows(lastRow + 1, maxRows - lastRow);
+//   }
+// }
+
 function doNothing() {
   // Do nothing!
 }
@@ -220,10 +230,38 @@ function getDataDigestedSheet() {
 }
 
 function setupDataDigestedSheet() {
+  const sheet = getDataDigestedSheet();
+  sheet.deleteRows(2, sheet.getMaxRows() - 1);
+  sheet.deleteColumns(2, sheet.getMaxColumns() - 1);
+
   setupFormulae();
   applyFormatting();
   recreateConditionalFormattingRules();
+
+  // removeTrailingBlankRows(sheet);
 }
+
+// function lastNonEmptyLine(sheet) {
+//   var maxRows = sheet.getMaxRows(); // Get the total number of rows
+//   for (var row = maxRows; row > 0; row--) {
+//     var rowValues = sheet.getRange(row, 1, 1, sheet.getLastColumn()).getValues()[0]; // Get the values of the entire row
+//     if (rowValues.join("").trim() !== "") { // Check if the row is not empty after joining and trimming
+//       return row; // Return the row number if it's not empty
+//     }
+//   }
+//   return 0; // Return 0 if no non-empty rows are found
+// }
+
+// function removeTrailingBlankRows(sheet) {
+//   var lastNonEmptyRow = lastNonEmptyLine(sheet); // Get the last non-empty row using the helper function
+//   var maxRows = sheet.getMaxRows(); // Get the total number of rows in the sheet
+//
+//   // Remove blank rows only if there are trailing blank rows
+//   if (maxRows > lastNonEmptyRow) {
+//     sheet.deleteRows(lastNonEmptyRow + 1, maxRows - lastNonEmptyRow); // Delete rows after the last non-empty row
+//   }
+// }
+//
 
 function setupFormulae() {
   const sheet = getDataDigestedSheet();
