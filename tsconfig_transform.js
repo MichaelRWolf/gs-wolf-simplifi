@@ -26,9 +26,10 @@ fs.readFile(tsconfigInPath, 'utf8', (err, data) => {
 // Override options...
   tsconfig.compilerOptions = tsconfig.compilerOptions || {};
 
-  tsconfig.compilerOptions.module = 'commonjs';
-  tsconfig.include = ["test/**/*.ts"];
-  tsconfig.exclude = ["src/**/*.ts"];
+  tsconfig.target = 'ES5';
+  tsconfig.compilerOptions.module = 'none';
+  tsconfig.include = ["src/**/*.ts"];
+  tsconfig.exclude = ["test/**/*.ts"];
   tsconfig.lib = ["es5", "dom"];
 
 // Write...

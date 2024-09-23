@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "ES2015",
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
@@ -11,7 +11,7 @@
     "allowJs": true,
     "checkJs": true,
     "types": ["jest"],
-    "lib": ["es5", "dom"],
+    "lib": ["es2015", "dom"],
 
     "noImplicitAny": true,
     "skipLibCheck": false,
@@ -22,6 +22,7 @@
   },
   "include": [
     "src/*.ts",
+    "test/*.ts",
     "types/**/*",
     "node_modules/approvals/lib/*.d.ts",
     "node_modules/approvals/lib/**/*.d.ts"

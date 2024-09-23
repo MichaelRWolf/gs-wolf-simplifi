@@ -1,1 +1,1 @@
-node create-tsconfig-test.js
+node tsconfig_transform.js

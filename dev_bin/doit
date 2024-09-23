@@ -3,8 +3,8 @@
 google_sheets_url="https://docs.google.com/spreadsheets/d/13osRy0mj4zq8cSxxxmjy6RECt3ZOTCPY385EPWaE_9k/edit?gid=1122782446#gid=1122782446"
 
 $(dirname $0)/update_config_files &&
-  ## tsc --project tsconfig.GAS.json &&
   npx jest --verbose &&
-  exit 17 &&
+  tsc --project tsconfig.GAS.json &&
   clasp push &&
+  exit 17 &&
   open "$google_sheets_url"
