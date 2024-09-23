@@ -1,7 +1,11 @@
-// const { verify } = require('approvaltests');
-const { verify } = require("approvals");
-const { expect } = require("chai");
-const inheritSplitAttributesFromParent = require("../src/inheritSplitAttributesFromParent");
+const inheritSplitAttributesFromParent = require('../src/inheritSplitAttributesFromParent');
+// const { expect } = require('chai');
+const { verify } = require('approvals');
+
+
+
+import { Transaction } from '../src/Transaction';
+
 
 describe("inheritSplitAttributesFromParent with inline CSV", function () {
   it("should process inline CSV input and compare output using ApprovalTests", function () {
