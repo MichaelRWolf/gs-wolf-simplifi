@@ -6,5 +6,5 @@ $(dirname $0)/update_config_files &&
   npx jest --verbose &&
   tsc --project tsconfig.GAS.json &&
   clasp push &&
-  exit 17 &&
+  # exit 17 &&
   open "$google_sheets_url"
