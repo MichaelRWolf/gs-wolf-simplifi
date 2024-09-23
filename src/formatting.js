@@ -231,8 +231,9 @@ function getDataDigestedSheet() {
 
 function setupDataDigestedSheet() {
   const sheet = getDataDigestedSheet();
-  sheet.deleteRows(2, sheet.getMaxRows() - 1);
-  sheet.deleteColumns(2, sheet.getMaxColumns() - 1);
+  // TODO - distribute SPLIT attributes from parent to child
+  // sheet.deleteRows(2, sheet.getMaxRows() - 1);
+  // sheet.deleteColumns(2, sheet.getMaxColumns() - 1);
 
   setupFormulae();
   applyFormatting();

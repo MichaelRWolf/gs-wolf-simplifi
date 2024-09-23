@@ -28,7 +28,9 @@ fs.readFile(tsconfigInPath, 'utf8', (err, data) => {
 
   tsconfig.target = 'ES5';
   tsconfig.compilerOptions.module = 'none';
-  tsconfig.include = ["src/**/*.ts"];
+  tsconfig.compilerOptions.allowJs = true;
+  tsconfig.compilerOptions.checkJs = false;
+  tsconfig.include = ["src/**/*.ts", "src/**/*.js"];
   tsconfig.exclude = ["test/**/*.ts"];
   tsconfig.lib = ["es5", "dom"];
 
