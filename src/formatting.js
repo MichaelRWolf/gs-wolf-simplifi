@@ -139,6 +139,9 @@ function checkTransfersBalance() {
       let difference = Math.abs(amount + matchedAmount);
 
       // Use ternary operator and strict equality check
+      // TODO: Probably incorrrect to compare to 'difference'.  
+      //       Better to do positive/negative compare on amount and matchedAmount.
+      // TODO: Assert difference < TOLERANCE
       let transferId =
         difference < TOLERANCE ? matchingTransferId : -matchingTransferId;
 
