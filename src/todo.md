@@ -15,5 +15,6 @@ function applyFormattingToPivotTablesTab() {
 
 ## DONE
 
+- Make dist/* files read-only to discourage editing.
 - Extend "2024" magic number to include 2025, 2026
 - Get 'Type' column to update in 'Data - Digested'
