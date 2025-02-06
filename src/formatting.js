@@ -414,7 +414,10 @@ function applyFormattingToDataDigestedTab() {
 }
 
 function applyFormattingToPivotTablesTab() {
-  const sheetName = "Pivot Tables";
+  applyFormattingToTab("Pivot Tables");
+}
+
+function applyFormattingToTab(sheetName) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   if (!sheet) {
     console.log(`${sheetName}" not found.`);
