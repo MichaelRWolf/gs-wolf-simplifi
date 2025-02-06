@@ -139,11 +139,11 @@ function checkTransfersBalance() {
       let difference = Math.abs(amount + matchedAmount);
 
       // Use ternary operator and strict equality check
-      // TODO: Probably incorrrect to compare to 'difference'.  
+      // TODO: Probably incorrrect to compare to 'difference'.
       //       Better to do positive/negative compare on amount and matchedAmount.
       // TODO: Assert difference < TOLERANCE
       let transferId =
-        difference < TOLERANCE ? matchingTransferId : -matchingTransferId;
+	  difference < TOLERANCE ? matchingTransferId : -matchingTransferId;
 
       // Transfer from this row...
       const transfer = [transferId, account, category, amount, postedOn];
@@ -151,11 +151,11 @@ function checkTransfersBalance() {
 
       // Transfer previously entered in map...
       const matchingTransfer = [
-        transferId,
-        matchedAccount,
-        matchedCategory,
-        matchedAmount,
-        matchedPostedOn,
+	transferId,
+	matchedAccount,
+	matchedCategory,
+	matchedAmount,
+	matchedPostedOn,
       ];
       matchingTransfers.push(matchingTransfer);
 
@@ -175,14 +175,14 @@ function checkTransfersBalance() {
     Logger.log("Unmatched or Unbalanced Transfers:");
     Object.entries(transferMap).forEach(([key, transfer]) => {
       Logger.log(
-        `key: ${key}, Account: ${transfer[accountIndex]}, Category: ${transfer[categoryIndex]}, Amount: ${transfer[amountIndex]}, postedOn: ${transfer[postedOnIndex]}`
+	`key: ${key}, Account: ${transfer[accountIndex]}, Category: ${transfer[categoryIndex]}, Amount: ${transfer[amountIndex]}, postedOn: ${transfer[postedOnIndex]}`,
       );
       matchingTransfers.push([
-        "",
-        transfer[accountIndex],
-        transfer[categoryIndex],
-        transfer[amountIndex],
-        transfer[postedOnIndex],
+	"",
+	transfer[accountIndex],
+	transfer[categoryIndex],
+	transfer[amountIndex],
+	transfer[postedOnIndex],
       ]);
     });
   } else {
@@ -206,7 +206,7 @@ function checkTransfersBalance() {
  */
 function updateTransfersSheet(matchingTransfers, headers) {
   const transferSheet =
-    SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Transfers");
+	SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Transfers");
 
   // Clear existing data
   transferSheet.clear();
@@ -289,22 +289,22 @@ function setupFormulae() {
   sheet.getRange("G1").setFormula(g1Formula);
 
   const h1Formula =
-    '={{"Parent Category", "Child Category"}; splitCategoryRange($D2:$D)}';
+	'={{"Parent Category", "Child Category"}; splitCategoryRange($D2:$D)}';
   sheet.getRange("H1").setFormula(h1Formula);
 
   const j1Formula =
-    '={"YYYY"; ARRAYFORMULA(IF(ISBLANK($B$2:$B), "", TEXT($B$2:$B, "yyyy")))}';
+	'={"YYYY"; ARRAYFORMULA(IF(ISBLANK($B$2:$B), "", TEXT($B$2:$B, "yyyy")))}';
   sheet.getRange("J1").setFormula(j1Formula);
 
   const k1Formula =
-    '={"YYYY-Qn"; ARRAYFORMULA(IF(ISBLANK($B$2:$B), "", TEXT($B$2:$B, "yyyy") & "-Q" & ROUNDUP(MONTH($B$2:$B)/3, 0)))}';
+	'={"YYYY-Qn"; ARRAYFORMULA(IF(ISBLANK($B$2:$B), "", TEXT($B$2:$B, "yyyy") & "-Q" & ROUNDUP(MONTH($B$2:$B)/3, 0)))}';
   sheet.getRange("K1").setFormula(k1Formula);
 }
 
 function newConditionalFormattingBuilderFactory(
   ranges,
   formula,
-  backgroundColor
+  backgroundColor,
 ) {
   // https://developers.google.com/apps-script/reference/spreadsheet/conditional-format-rule-builder
   return SpreadsheetApp.newConditionalFormatRule()
@@ -345,21 +345,21 @@ function recreateConditionalFormattingRules() {
   const incomeRule = newConditionalFormattingRule(
     [getDataDigestedSheet().getRange("A2:I2499")],
     '=$G2="Income"',
-    "#e6efdb"
+    "#e6efdb",
   );
   rules.push(incomeRule);
 
   const transferTypeRule = newConditionalFormattingRule(
     [getDataDigestedSheet().getRange("A2:I2499")],
     '=$G2="Transfer"',
-    "#93CCEA"
+    "#93CCEA",
   );
   rules.push(transferTypeRule);
 
   const transferCategoryRule = newConditionalFormattingRule(
     [getDataDigestedSheet().getRange("A2:I2499")],
     '=$H2="Transfer"',
-    "#d9e7fd"
+    "#d9e7fd",
   );
   rules.push(transferCategoryRule);
 
@@ -370,7 +370,7 @@ function newConditionalFormattingRule(ranges, formula, backgroundColor) {
   return newConditionalFormattingBuilderFactory(
     ranges,
     formula,
-    backgroundColor
+    backgroundColor,
   ).build();
 }
 
@@ -440,6 +440,8 @@ function applyFormattingToPivotTablesTab() {
     2022: numberAccountingFormat,
     2023: numberAccountingFormat,
     2024: numberAccountingFormat,
+    2025: numberAccountingFormat,
+    2026: numberAccountingFormat,
     amount: numberAccountingFormat,
   };
   // Get the headers
@@ -461,6 +463,8 @@ function applyFormattingToPivotTablesTab() {
     2022: 75,
     2023: 75,
     2024: 75,
+    2025: 75,
+    2026: 75,
     amount: 75,
   };
 
@@ -470,7 +474,7 @@ function applyFormattingToPivotTablesTab() {
     const width = columnWidth[header];
     if (width) {
       console.log(
-        `Setting '${header}' (${columnNumber}) columnWidth to ${width}`
+	`Setting '${header}' (${columnNumber}) columnWidth to ${width}`,
       );
       sheet.setColumnWidth(columnNumber, width); // Set the column width based on header lookup
     }
@@ -478,11 +482,11 @@ function applyFormattingToPivotTablesTab() {
     const format = numberFormat[header];
     if (format) {
       console.log(
-        `Setting '${header}' (${columnNumber}) numberFormat to ${format}`
+	`Setting '${header}' (${columnNumber}) numberFormat to ${format}`,
       );
       sheet
-        .getRange(3, columnNumber, sheet.getLastRow())
-        .setNumberFormat(format);
+	.getRange(3, columnNumber, sheet.getLastRow())
+	.setNumberFormat(format);
     }
   });
 
