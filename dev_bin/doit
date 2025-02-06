@@ -1,10 +1,24 @@
 #! /bin/bash
+set -euo pipefail
 
-google_sheets_url="https://docs.google.com/spreadsheets/d/13osRy0mj4zq8cSxxxmjy6RECt3ZOTCPY385EPWaE_9k/edit?gid=1122782446#gid=1122782446"
+# Extensions -> Google Apps Script
+apps_script_url="https://script.google.com/u/0/home/projects/1vZxhYsPWTTxwmvf-x7p6MnI8LWzNkNRQIhkPvTblaZ9yNQ1CR4bOamMB/edit"
+
+# Tabs
+pivot_tables_tab_url="https://docs.google.com/spreadsheets/d/13osRy0mj4zq8cSxxxmjy6RECt3ZOTCPY385EPWaE_9k/edit?gid=1122782446#gid=1122782446"
+data_digested_tab_url="https://docs.google.com/spreadsheets/d/13osRy0mj4zq8cSxxxmjy6RECt3ZOTCPY385EPWaE_9k/edit?gid=0#gid=0"
+
 
 $(dirname $0)/update_config_files &&
   npx jest --verbose &&
   tsc --project tsconfig.GAS.json &&
   clasp push &&
-  # exit 17 &&
-  open "$google_sheets_url"
+
+  for url in 				\
+      "${apps_script_url}" 		\
+      "${pivot_tables_tab_url}" 	\
+      "${data_digested_tab_url}" 	\
+      ;
+  do
+      open --url "$url"
+  done
