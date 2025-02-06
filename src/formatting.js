@@ -76,8 +76,12 @@ function setupMenus() {
       "applyFormattingToDataDigestedTab"
     )
     .addItem(
-      "2.1 applyFormattingToPivotTablesTab",
+      "2.1.1 applyFormattingToPivotTablesTab",
       "applyFormattingToPivotTablesTab"
+    )
+    .addItem(
+      "2.1 applyFormattingToAlTabsBeginningWithStringlPivot",
+      "applyFormattingToAlTabsBeginningWithStringlPivot"
     )
 
     .addItem("2. applyFormatting", "applyFormatting")
@@ -413,6 +417,18 @@ function applyFormattingToDataDigestedTab() {
   console.log(`Formatting sheet:  ${sheetName}...done`);
 }
 
+function applyFormattingToAlTabsBeginningWithStringlPivot() {
+  const sheets = SpreadsheetApp.getActiveSpreadsheet().getSheets();
+
+  sheets.forEach(sheet => {
+    const sheetName = sheet.getName();
+    if (sheetName.startsWith("Pivot")) {
+      console.log(`Applying formatting to: ${sheetName}`);
+      applyFormattingToTab(sheetName);
+    }
+  });
+}
+
 function applyFormattingToPivotTablesTab() {
   applyFormattingToTab("Pivot Tables");
 }
@@ -504,5 +520,6 @@ function applyFormattingToTab(sheetName) {
 
 function applyFormatting() {
   applyFormattingToDataDigestedTab();
-  applyFormattingToPivotTablesTab();
+  applyFormattingToAlTabsBeginningWithStringlPivot();
 }
+
