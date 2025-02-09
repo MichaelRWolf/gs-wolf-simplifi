@@ -47,14 +47,12 @@ fs.chmod(tsconfigOutPath, 0o644, (err) => {
         console.error(`Error writing ${tsconfigOutPath}: ${err.message}`);
         return;
       }
-      console.log(`${tsconfigOutPath} has been created successfully!`);
+      console.log(`'${tsconfigOutPath}' has been created from '${tsconfigInPath}!'`);
 
       // Set the file as read-only
       fs.chmod(tsconfigOutPath, 0o444, (err) => {
         if (err) {
           console.error(`Error setting file to read-only: ${err.message}`);
-        } else {
-          console.log(`${tsconfigOutPath} is now read-only.`);
         }
       });
     });
