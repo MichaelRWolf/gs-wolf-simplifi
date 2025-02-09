@@ -16,6 +16,7 @@ function listTriggers() {
   }
 }
 
+
 function deleteAllTriggers() {
   const triggers = ScriptApp.getProjectTriggers();
   const count = triggers.length;
@@ -28,10 +29,23 @@ function deleteAllTriggers() {
 }
 
 function setupTriggers() {
-  ScriptApp.newTrigger("myOnOpen")
+  ScriptApp.newTrigger(myOnOpen.name)
     .forSpreadsheet(SpreadsheetApp.getActiveSpreadsheet())
     .onOpen()
     .create();
+  console.log("Trigger set up: onOpen.");
+
+  // ScriptApp.newTrigger("onEdit")
+  //   .forSpreadsheet(SpreadsheetApp.getActiveSpreadsheet())
+  //   .onEdit()
+  //   .create();
+  // console.log("Trigger set up: onEdit.");
+
+  ScriptApp.newTrigger(myOnSelectionChange.name)
+    .forSpreadsheet(SpreadsheetApp.getActiveSpreadsheet())
+    .onSelectionChange()
+    .create();
+  console.log("Trigger set up: onSelectionChange.");
 }
 
 // function removeTrailingBlankRows(sheet) {
@@ -53,8 +67,10 @@ function setupMenus() {
 
   ui.createMenu("Custom Menu")
 
-    .addItem("4. checkTransfersBalance", "checkTransfersBalance")
-
+    .addItem(
+      "4. checkTransfersBalance", 
+      "checkTransfersBalance"
+    )
     .addItem(
       "3.c createConditionalFormattingRuleForTransferInColumnH",
       "createConditionalFormattingRuleForTransferInColumnH"
@@ -72,16 +88,16 @@ function setupMenus() {
       "recreateConditionalFormattingRules"
     )
     .addItem(
+      "2.3 applyFormattingToActiveSheet",
+      "applyFormattingToActiveSheet"
+    )
+    .addItem(
       "2.2 applyFormattingToDataDigestedTab",
       "applyFormattingToDataDigestedTab"
     )
     .addItem(
-      "2.1.1 applyFormattingToPivotTablesTab",
-      "applyFormattingToPivotTablesTab"
-    )
-    .addItem(
-      "2.1 applyFormattingToAlTabsBeginningWithStringlPivot",
-      "applyFormattingToAlTabsBeginningWithStringlPivot"
+      "2.1 applyFormattingToAllSheetsWithNameBeginningWithPivot",
+      "applyFormattingToAllSheetsWithNameBeginningWithPivot"
     )
 
     .addItem("2. applyFormatting", "applyFormatting")
@@ -243,7 +259,7 @@ function setupDataDigestedSheet() {
   // sheet.deleteColumns(2, sheet.getMaxColumns() - 1);
 
   setupFormulae();
-  applyFormatting();
+  applyFormattingToDataDigestedTab();
   recreateConditionalFormattingRules();
 
   // removeTrailingBlankRows(sheet);
@@ -417,23 +433,21 @@ function applyFormattingToDataDigestedTab() {
   console.log(`Formatting sheet:  ${sheetName}...done`);
 }
 
-function applyFormattingToAlTabsBeginningWithStringlPivot() {
+
+function applyFormattingToAllSheetsWithNameBeginningWithPivot() {
   const sheets = SpreadsheetApp.getActiveSpreadsheet().getSheets();
 
   sheets.forEach(sheet => {
     const sheetName = sheet.getName();
     if (sheetName.startsWith("Pivot")) {
       console.log(`Applying formatting to: ${sheetName}`);
-      applyFormattingToTab(sheetName);
+      applyFormattingToSheetName(sheetName);
     }
   });
 }
 
-function applyFormattingToPivotTablesTab() {
-  applyFormattingToTab("Pivot Tables");
-}
 
-function applyFormattingToTab(sheetName) {
+function applyFormattingToSheetName(sheetName) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   if (!sheet) {
     console.log(`${sheetName}" not found.`);
@@ -518,8 +532,55 @@ function applyFormattingToTab(sheetName) {
   console.log(`Formatting sheet:  ${sheetName}...done`);
 }
 
-function applyFormatting() {
-  applyFormattingToDataDigestedTab();
-  applyFormattingToAlTabsBeginningWithStringlPivot();
+
+// function applyFormatting() {
+//   applyFormattingToDataDigestedTab();
+//   // applyFormattingToAllSheetsWithNameBeginningWithPivot();
+// }
+
+
+function applyFormattingToActiveSheet() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const sheetName = sheet.getName();
+  applyFormattingToSheetName(sheetName);
+}
+
+
+function myOnSelectionChange(e) {
+  const sheet = e.range.getSheet();
+  const sheetName = sheet.getName();
+
+  if (sheetName.startsWith("Pivot")) {
+    console.log(`Applying formatting to: ${sheetName}`);
+    applyFormattingToSheetName(sheetName);
+  }
+}
+
+
+function onEdit(e) {
+  const sheet = e.range.getSheet();
+  const sheetName = sheet.getName();
+  
+  if (!sheetName.startsWith("Pivot")) return; // Only apply to pivot sheets
+  
+  const cache = CacheService.getUserCache();
+  const previousHeaders = JSON.parse(cache.get(`pivot_headers_${sheetName}`) || "[]");
+  const currentHeaders = getPivotTableHeaders(sheet);
+  
+  if (!arraysEqual(previousHeaders, currentHeaders)) {
+    console.log(`Headers changed for ${sheetName}, applying formatting.`);
+    applyFormattingToSheetName(sheetName);
+    
+    // Update the cache with the new headers
+    cache.put(`pivot_headers_${sheetName}`, JSON.stringify(currentHeaders), 21600); // 6-hour cache
+  }
+}
+
+function getPivotTableHeaders(sheet) {
+  return sheet.getRange("2:2").getValues()[0].filter(header => header !== ""); // Extract non-empty headers
+}
+
+function arraysEqual(a, b) {
+  return JSON.stringify(a) === JSON.stringify(b);
 }
 
