@@ -307,6 +307,7 @@ function setupFormulae() {
   const g1Formula = '={ "Type"; Transaction_Types($A2:$A, $H2:$H) }';
   sheet.getRange("G1").setFormula(g1Formula);
 
+  // Note 1-column formula in H1 fills 2 columns - H:I
   const h1Formula =
 	'={{"Parent Category", "Child Category"}; splitCategoryRange($D2:$D)}';
   sheet.getRange("H1").setFormula(h1Formula);
