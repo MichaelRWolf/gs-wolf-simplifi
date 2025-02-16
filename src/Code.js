@@ -114,6 +114,7 @@ function Transaction_Type(account, category) {
 function Transaction_Types(accounts, categories) {
   // Flatten the input if necessary
   if (Array.isArray(categories[0])) {
+    console.log("Had to flatten 'categories' parameter");
     categories = categories.flat();
     accounts = accounts.flat(); // Ensure accounts is also flattened if necessary
   }
@@ -122,6 +123,8 @@ function Transaction_Types(accounts, categories) {
   if (categories.length !== accounts.length) {
     throw new Error("The length of categories and accounts must be the same");
   }
+
+  console.log(`Identical lengths for 'categories' and 'accounts': ${categories.length}`);
 
   // Map each category and corresponding account to the result of Transaction_Type
   return categories.map((category, index) => {

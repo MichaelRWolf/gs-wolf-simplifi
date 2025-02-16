@@ -100,7 +100,6 @@ function setupMenus() {
       "applyFormattingToAllSheetsWithNameBeginningWithPivot"
     )
 
-    .addItem("2. applyFormatting", "applyFormatting")
     .addItem("1. setupFormulae", "setupFormulae")
     .addItem("0. setupDataDigestedSheet", "setupDataDigestedSheet")
     .addItem("-. setupMenus", "setupMenus")

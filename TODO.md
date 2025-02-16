@@ -2,7 +2,8 @@
 
 ## To Do
 
-- Remove dependency on 'Pivot Tables' as special name
+- Use identifier name instead of string to build menus (e.g. myOnOpen.name or checkTransfersBalance.name)
+
 - create dateAs_YYYY() helper function
 - create dateAs_YYYY-Qn() helper function
 
@@ -11,6 +12,9 @@
 
 ## DONE
 
+- Remove 'applyFormatting', a deprecated aggregator
+- Create onSelectionChange() to prevent expensive (and wasteful) action onLoad.
+- Remove dependency on 'Pivot Tables' as special name
 - New function: resetTriggers. Remove all triggers. Set onLoad to setupMenus.
 - New function: createRule({ranges, condition, backgroundColor})
 - Add YYYY column to 'Data - Digested' tab (via arrayformula trigger onLoad)
