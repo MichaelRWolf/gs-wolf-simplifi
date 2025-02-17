@@ -6,6 +6,9 @@
 
 ## TODO
 
+- `formatting.js - checkTransfersBalance()` - Do not match transfers
+  that are more than N days apart
+
 - Extract method, then loop over all tabs s/^Pivot/
 
 ```typescript
