@@ -69,50 +69,38 @@ function setupMenus() {
 
     .addItem(
       "4. checkTransfersBalance", 
-      "checkTransfersBalance"
-    )
-    .addItem(
-      "3.c createConditionalFormattingRuleForTransferInColumnH",
-      "createConditionalFormattingRuleForTransferInColumnH"
-    )
-    .addItem(
-      "3.b createConditionalFormattingRuleForTransferInColumnG",
-      "createConditionalFormattingRuleForTransferInColumnG"
-    )
-    .addItem(
-      "3.a createIncomeConditionalFormattingRuleForIncome",
-      "createIncomeConditionalFormattingRuleForIncome"
+      checkTransfersBalance.name
     )
     .addItem(
       "3. recreateConditionalFormattingRules",
-      "recreateConditionalFormattingRules"
+      recreateConditionalFormattingRules.name
     )
     .addItem(
       "2.3 applyFormattingToActiveSheet",
-      "applyFormattingToActiveSheet"
+      applyFormattingToActiveSheet.name
     )
     .addItem(
       "2.2 applyFormattingToDataDigestedTab",
-      "applyFormattingToDataDigestedTab"
+      applyFormattingToDataDigestedTab.name
     )
     .addItem(
       "2.1 applyFormattingToAllSheetsWithNameBeginningWithPivot",
-      "applyFormattingToAllSheetsWithNameBeginningWithPivot"
+      applyFormattingToAllSheetsWithNameBeginningWithPivot.name
     )
 
-    .addItem("1. setupFormulae", "setupFormulae")
-    .addItem("0. setupDataDigestedSheet", "setupDataDigestedSheet")
-    .addItem("-. setupMenus", "setupMenus")
+    .addItem("1. setupFormulae", setupFormulae.name)
+    .addItem("0. setupDataDigestedSheet", setupDataDigestedSheet.name)
+    .addItem("-. setupMenus", setupMenus.name)
 
-    .addItem("----", "doNothing")
+    .addItem("----", doNothing.name)
 
-    .addItem("X - setupTriggers", "setupTriggers")
-    .addItem("deleteAllTriggers", "deleteAllTriggers")
-    .addItem("listTriggers", "listTriggers")
+    .addItem("X - setupTriggers", setupTriggers.name)
+    .addItem("deleteAllTriggers", deleteAllTriggers.name)
+    .addItem("listTriggers", listTriggers.name)
 
-    .addItem("----", "doNothing")
+    .addItem("----", doNothing.name)
 
-    .addItem("myOnOpen", "myOnOpen")
+    .addItem("myOnOpen", myOnOpen.name)
 
     .addToUi();
 }
