@@ -40,6 +40,10 @@ fs.chmod(tsconfigOutPath, 0o644, (err) => {
     tsconfig.include = [ "src/**/*.js" ];
     tsconfig.exclude = [ "test/**/*.ts", "node_modules" ];
 
+    tsconfig.compilerOptions.esModuleInterop = true;
+    tsconfig.compilerOptions.moduleResolution = "classic";
+
+
     // Write to output file
     const tsconfigData = JSON.stringify(tsconfig, null, 2);
     fs.writeFile(tsconfigOutPath, tsconfigData, 'utf8', (err) => {
