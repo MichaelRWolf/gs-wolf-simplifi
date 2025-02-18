@@ -6,7 +6,7 @@
 
 ## TODO
 
-- Modify `parenthesizedCategoryFromCategory` to allow array parameters so that it can be used in ARRAYFORMULA.  See discussion near here.... https://chatgpt.com/c/67b4be23-4cfc-8009-ab77-1367611ccd4a
+- Modify `parenthesizedCategoryFromCategory` to allow array parameters so that it can be used in ARRAYFORMULA.  See discussion near here.... https://chatgpt.com/c/67b4be23-4cfc-8009-ab77-1367611ccd4a/
 
 - `formatting.js - checkTransfersBalance()` - Do not match transfers
   that are more than N days apart
