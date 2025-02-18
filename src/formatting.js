@@ -307,6 +307,14 @@ function setupFormulae() {
   const k1Formula =
 	'={"YYYY-Qn"; ARRAYFORMULA(IF(ISBLANK($B$2:$B), "", TEXT($B$2:$B, "yyyy") & "-Q" & ROUNDUP(MONTH($B$2:$B)/3, 0)))}';
   sheet.getRange("K1").setFormula(k1Formula);
+
+  // const l1Formula =
+  // 	'={"paren category"; ARRAYFORMULA(parenthesizedCategoryFromCategory($D2:$D))}';
+  // sheet.getRange("L1").setFormula(l1Formula);
+
+  const l1Formula =
+	'={"YYYY"; ARRAYFORMULA(IF(ISBLANK($D$2:$D), "", parenthesizedCategoryFromCategory($D$2:$D)))}';
+  sheet.getRange("L1").setFormula(l1Formula);
 }
 
 function newConditionalFormattingBuilderFactory(

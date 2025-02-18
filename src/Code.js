@@ -152,3 +152,33 @@ function Former_Transaction_Types(accounts, categories) {
     return Transaction_Type(category);
   });
 }
+
+
+/**
+ * Extracts all parenthesized phrases from the category string if they contain
+ * the words "business" or "personal" (case-insensitive).
+ *
+ * If multiple matching phrases exist, they are returned as a space-separated string.
+ *
+ * @param {string} category The input category string.
+ * @return {string} The extracted text inside parentheses if it contains "business" or "personal", otherwise an empty string.
+ * @customfunction
+ */
+function parenthesizedCategoryFromCategory(category) {
+  if (!category) return "";
+
+  // Match all occurrences of text inside parentheses
+  var matches = category.match(/\(([^)]+)\)/g);
+
+  if (matches) {
+    // Filter only those that contain "business" or "personal" (case-insensitive)
+    var filtered = matches.filter(text => /business|personal|deduction/i.test(text));
+
+    // Return all matched phrases joined by a space
+    if (filtered.length > 0) {
+      return filtered.join(" ");
+    }
+  }
+
+  return ""; // Return empty string if no match
+}
