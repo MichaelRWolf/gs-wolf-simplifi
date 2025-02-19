@@ -66,26 +66,35 @@ describe("CSV Parsing", () => {
   });
 });
 
-describe("CSV before cleanup", () => {
+describe("Transaction list - Raw", () => {
   let transactions;
   let split_parent_records;
 
   beforeEach(() => {
     transactions = Papa.parse(csv_string, { skipEmptyLines: true }).data;
-    split_parent_records = transactions.filter(row => row[index_of['category']] === "SPLIT");
+    split_parent_records = transactions.filter(row => 
+      row[index_of['category']] === "SPLIT"
+    );
   });
 
-  test("Has SPLIT parent records...", () => {
+  test("Has some SPLIT parent records...", () => {
     expect(split_parent_records.length).toBeGreaterThan(0);
   });
 
-  test("... ALL of which have non-empty 'account', 'state', 'postedOn', and 'payee'", () => {
-    const conformers = split_parent_records.filter(row => row[index_of['account']] !== "" && row[index_of['state']] !== "" && row[index_of['postedOn']] !== "" && row[index_of['payee']] !== "");
+  test("... ALL have non-empty 'account', 'state', 'postedOn', and 'payee'", () => {
+    const conformers = split_parent_records.filter(row => 
+        row[index_of['account']]  !== "" && 
+	row[index_of['state']]    !== "" && 
+	row[index_of['postedOn']] !== "" && 
+	row[index_of['payee']]    !== ""
+    );
     expect(conformers.length).toBe(split_parent_records.length);
   });
 
-  test("... ALL of which have zero 'amount'", () => {
-    const violators = split_parent_records.filter(row => row[index_of['amount']] !== '$0.00');
+  test("... ALL have zero 'amount'", () => {
+    const violators = split_parent_records.filter(row => 
+      row[index_of['amount']] !== '$0.00'
+    );
     expect(violators.length).toBe(0);
   });
 });
