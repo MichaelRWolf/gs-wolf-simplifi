@@ -1,0 +1,11 @@
+#! /bin/bash
+set -euo pipefail
+
+this_dirname=$(dirname $(realpath $0))
+this_basename=$(basename $(realpath $0))
+
+py_dirname=$(realpath $this_dirname/../src)
+py_filename="$py_dirname/${this_basename}.py"
+
+
+eval python3 "$py_filename" "$@"
