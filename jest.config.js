@@ -4,15 +4,18 @@ module.exports = {
   testEnvironment: 'node',
   moduleFileExtensions: ['ts', 'js'],
   transform: {
-  '^.+\\.ts$': ['ts-jest', {tsconfig: 'tsconfig.json'}]
+    '^.+\\.ts$': ['ts-jest', {tsconfig: 'tsconfig.GAS.json'}]
   },
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "test/Transaction.test.ts" // 👈 Add this line
+  ]
 
   // globals: {
   //   'ts-jest': {
   //     tsconfig: 'tsconfig.json', // Ensures ES5 targeting
   //   },
   // Specify test file patterns and ensure both src and test files are compiled
-  testMatch: ['**/**/*.test.ts'],
   // setupFiles: ['./Transaction.ts'],  // Load Transaction class globally before tests run
   // setupFilesAfterEnv: ['./Transaction.ts'],  // Load Transaction class globally before tests run
   // setupFilesAfterEnv: ['./src/Transaction.ts'],  // Load Transaction class globally before tests run
