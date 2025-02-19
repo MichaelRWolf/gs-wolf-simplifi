@@ -2,7 +2,14 @@
 
 ## To Do
 
+### Test
+
+-- Before
+splitCategory(${1:categoryString})$0
+
 - Use identifier name instead of string to build menus (e.g. myOnOpen.name or checkTransfersBalance.name)
+
+###
 
 - create dateAs_YYYY() helper function
 - create dateAs_YYYY-Qn() helper function

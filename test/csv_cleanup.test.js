@@ -69,6 +69,7 @@ describe("CSV Parsing", () => {
   });
 });
 
+
 describe("CSV parse/string/parse round-trip", () => {
   let transactions;
   let csv_output;
@@ -87,3 +88,63 @@ describe("CSV parse/string/parse round-trip", () => {
     expect(transactions2).toStrictEqual(transactions);
   });
 });
+
+
+describe("CSV before cleanup", () => {
+  let transactions;
+
+  beforeEach(() => {
+    transactions = Papa.parse(csv_string, { skipEmptyLines: true }).data;
+  });
+
+  let split_parent_records;
+  test("Has SPLIT parent records...", () => {
+    split_parent_records = transactions.filter(row => row[6] === "SPLIT");
+    expect(split_parent_records.length).toBeGreaterThan(0);
+    // console.log(split_parent_records);
+  });
+
+  test("... ALL of which have non-empty 'account', 'state', 'postedOn', and 'payee'", () => {
+    const conformers = split_parent_records.filter(row => row[1] !== "" && row[2] !== "" && row[3] !== "" && row[4] !== "");
+    expect(conformers.length).toBe(split_parent_records.length);
+  });
+
+  test("... ALL of which have zero 'amount'", () => {
+    const violators = split_parent_records.filter(row => row[9] !== '$0.00');
+    expect(violators.length).toBe(0)
+  });
+
+
+  // Has SPLIT child records
+  // ... ALL of which have empty 'account', 'state', 'postedOn', and 'payee'
+  // ... ALL of which have non-zero 'amount'
+  // ... ALL of which have non-empty 'category' and not 'SPLIT'
+
+
+  describe("BECU ATM Split on 7/12/2024", () => {
+// ,"BECU Checking","CLEARED","7/12/2024","Atm Withdrawal","","SPLIT","","","$0.00","","","","","",""
+// ,,,,,,"Personal Expense:ATM & Pocket Cash","",,"-300.00",,,,,,
+// ,,,,,,"Personal Expense:Fees - Atm & Bank & Finance & Late & Service Charges (personal)","",,"-4.
+
+//     filter:
+// postedOn 7/12/2024
+// account BECU Checking
+// payee Atm Withdrawal
+
+//     assert:
+// count 1
+// category SPLIT
+// amount $0.00
+
+//     act & assert
+// count 3?
+// 1 category SPLIT
+// N category non-split
+// sum amount = $304.00
+  });
+  
+
+
+  
+});
+
