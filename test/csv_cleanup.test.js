@@ -66,6 +66,9 @@ describe("CSV Parsing", () => {
 
 describe("Transaction list - Raw", () => {
   let split_parent_records;
+  let split_parent_record_count_original;
+  let matching_records;
+
   beforeEach(() => {
     split_parent_records = transactions_original.filter(row =>
       row[index_of['category']] === "SPLIT"
@@ -73,19 +76,19 @@ describe("Transaction list - Raw", () => {
   });
 
   describe("Raw", () => {
-    
     it("Has some SPLIT parent records...", () => {
-      expect(split_parent_records.length).toBeGreaterThan(0);
+      split_parent_record_count_original = split_parent_records.length;
+      expect(split_parent_record_count_original).toBeGreaterThan(0);
     });
     
     test("... ALL have non-empty 'account', 'state', 'postedOn', and 'payee'", () => {
-      const conformers = split_parent_records.filter(row =>
-        row[index_of['account']]  !== "" &&
+      matching_records = split_parent_records.filter(row =>
+	row[index_of['account']]  !== "" &&
 	  row[index_of['state']]    !== "" &&
 	  row[index_of['postedOn']] !== "" &&
 	  row[index_of['payee']]    !== ""
       );
-      expect(conformers.length).toBe(split_parent_records.length);
+      expect(matching_records.length).toBe(split_parent_records.length);
     });
 
     test("... ALL have zero 'amount'", () => {
@@ -105,5 +108,13 @@ describe("Transaction list - Raw", () => {
       expect(transactions_cleaned.length).toBeGreaterThan(3);
       expect(transactions_cleaned.length).toBe(transactions_original.length);
     });
+    test("... and SPLIT parent count", () => {
+      expect(split_parent_records.length).toBe(split_parent_record_count_original);
+    });
+
+    it("Is still identical", () => {
+      expect(transactions_cleaned).toStrictEqual(transactions_original);
+    });
+
   });
 });

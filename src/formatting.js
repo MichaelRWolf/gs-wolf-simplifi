@@ -276,20 +276,17 @@ function setupDataDigestedSheet() {
 
 function setupFormulae() {
   const sheet = getDataDigestedSheet();
-
   const a1Formula = `
-  =QUERY('Data - Raw'!A:J, 
-    "SELECT B, D, E, G, H, J 
-     WHERE B IS NOT NULL 
-        or D IS NOT NULL 
-        or E IS NOT NULL 
-        or G IS NOT NULL 
-        or H IS NOT NULL 
-        or J IS NOT NULL 
-     ORDER BY D DESC, B, E, J", 
-    1)
-`.trim();
-  // "=query('Data - Raw'!A:J,\"Select B, D, E, G, H, J order by D DESC, B, E, J\", 1)";
+  =QUERY('Data - Raw'!A:J,
+    "SELECT B, D, E, G, H, J
+     WHERE B IS NOT NULL
+        or D IS NOT NULL
+        or E IS NOT NULL
+        or G IS NOT NULL
+        or H IS NOT NULL
+        or J IS NOT NULL
+     ORDER BY D DESC, B, E",
+    1)`.trim();
   sheet.getRange("A1").setFormula(a1Formula);
 
   const g1Formula = '={ "Type"; Transaction_Types($A2:$A, $H2:$H) }';
