@@ -1,11 +1,6 @@
 const Papa = require("papaparse");
 
-let csv_string;
-let headers;
-let index_of;
-
-beforeAll(() => {
-  csv_string = `
+const  csv_text_original = `
 ,account,state,postedOn,payee,usage,category,tags,notes,amount,action,security,description,quantity,price,commission
 
 
@@ -29,50 +24,45 @@ beforeAll(() => {
 ,"Citi Visa","CLEARED","7/16/2024","Gas Lite General Store","","Personal Auto & RV Expenses:Propane / LP Gas","","","-$25.43","","","","","",""
   `.trim();
 
-  headers = ["account", "state", "postedOn", "payee", "usage", "category", "tags", "notes", "amount", "action", "security", "description", "quantity", "price", "commission"];
-  index_of = Object.fromEntries(headers.map((header, index) => [header, index + 1]));
-});
+const transactions_original = Object.freeze(Papa.parse(csv_text_original, { skipEmptyLines: true }).data);
+const headers = Object.freeze(transactions_original[0].slice(1));
+const index_of = Object.fromEntries(headers.map((header, index) => [header, index + 1]));
+
 
 describe("CSV Data", () => {
   test("CSV string should have length greater than zero", () => {
-    expect(csv_string.length).toBeGreaterThan(0);
+    expect(csv_text_original.length).toBeGreaterThan(0);
   });
 });
 
+
 describe("CSV Parsing", () => {
-  let transactions;
-
-  beforeEach(() => {
-    transactions = Papa.parse(csv_string, { skipEmptyLines: true }).data;
-  });
-
   test("Parses CSV into a 2D array with correct row count", () => {
-    expect(transactions.length).toBe(14); // Header + 13 data rows
+    expect(transactions_original.length).toBe(14); // Header + 13 data rows
   });
 
   describe("Header validation", () => {
     test("First cell should be empty", () => {
-      expect(transactions[0][0]).toBe("");
+      expect(transactions_original[0][0]).toBe("");
     });
 
     test("Remaining header values should match headers", () => {
-      expect(transactions[0].slice(1)).toEqual(headers);
+      expect(transactions_original[0].slice(1)).toEqual(headers);
     });
   });
 
   test("Each row should have value for each header (and empty leading header)", () => {
     const expectedColumns = 1 + headers.length;
-    transactions.forEach(row => expect(row.length).toBe(expectedColumns));
+    transactions_original.forEach(row => expect(row.length).toBe(expectedColumns));
   });
 });
 
+
 describe("Transaction list - Raw", () => {
-  let transactions;
   let split_parent_records;
 
-  beforeEach(() => {
-    transactions = Papa.parse(csv_string, { skipEmptyLines: true }).data;
-    split_parent_records = transactions.filter(row => 
+  beforeAll(() => {
+    split_parent_records = transactions_original.filter(row =>
       row[index_of['category']] === "SPLIT"
     );
   });
@@ -82,17 +72,17 @@ describe("Transaction list - Raw", () => {
   });
 
   test("... ALL have non-empty 'account', 'state', 'postedOn', and 'payee'", () => {
-    const conformers = split_parent_records.filter(row => 
-        row[index_of['account']]  !== "" && 
-	row[index_of['state']]    !== "" && 
-	row[index_of['postedOn']] !== "" && 
+    const conformers = split_parent_records.filter(row =>
+        row[index_of['account']]  !== "" &&
+	row[index_of['state']]    !== "" &&
+	row[index_of['postedOn']] !== "" &&
 	row[index_of['payee']]    !== ""
     );
     expect(conformers.length).toBe(split_parent_records.length);
   });
 
   test("... ALL have zero 'amount'", () => {
-    const violators = split_parent_records.filter(row => 
+    const violators = split_parent_records.filter(row =>
       row[index_of['amount']] !== '$0.00'
     );
     expect(violators.length).toBe(0);
