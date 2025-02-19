@@ -29,6 +29,12 @@ const headers = Object.freeze(transactions_original[0].slice(1));
 const index_of = Object.fromEntries(headers.map((header, index) => [header, index + 1]));
 
 
+function csv_cleanup_splits(transactions) {
+  return transactions;
+}
+
+
+
 describe("CSV Data", () => {
   test("CSV string should have length greater than zero", () => {
     expect(csv_text_original.length).toBeGreaterThan(0);
@@ -60,31 +66,44 @@ describe("CSV Parsing", () => {
 
 describe("Transaction list - Raw", () => {
   let split_parent_records;
-
-  beforeAll(() => {
+  beforeEach(() => {
     split_parent_records = transactions_original.filter(row =>
       row[index_of['category']] === "SPLIT"
     );
   });
 
-  test("Has some SPLIT parent records...", () => {
-    expect(split_parent_records.length).toBeGreaterThan(0);
-  });
-
-  test("... ALL have non-empty 'account', 'state', 'postedOn', and 'payee'", () => {
-    const conformers = split_parent_records.filter(row =>
+  describe("Raw", () => {
+    
+    it("Has some SPLIT parent records...", () => {
+      expect(split_parent_records.length).toBeGreaterThan(0);
+    });
+    
+    test("... ALL have non-empty 'account', 'state', 'postedOn', and 'payee'", () => {
+      const conformers = split_parent_records.filter(row =>
         row[index_of['account']]  !== "" &&
-	row[index_of['state']]    !== "" &&
-	row[index_of['postedOn']] !== "" &&
-	row[index_of['payee']]    !== ""
-    );
-    expect(conformers.length).toBe(split_parent_records.length);
+	  row[index_of['state']]    !== "" &&
+	  row[index_of['postedOn']] !== "" &&
+	  row[index_of['payee']]    !== ""
+      );
+      expect(conformers.length).toBe(split_parent_records.length);
+    });
+
+    test("... ALL have zero 'amount'", () => {
+      const violators = split_parent_records.filter(row =>
+	row[index_of['amount']] !== '$0.00'
+      );
+      expect(violators.length).toBe(0);
+    });
   });
 
-  test("... ALL have zero 'amount'", () => {
-    const violators = split_parent_records.filter(row =>
-      row[index_of['amount']] !== '$0.00'
-    );
-    expect(violators.length).toBe(0);
+
+  const transactions_cleaned = Object.freeze(csv_cleanup_splits(transactions_original));
+
+
+  describe("Cleaned", () => {
+    it("Has identical transaction count", () => {
+      expect(transactions_cleaned.length).toBeGreaterThan(3);
+      expect(transactions_cleaned.length).toBe(transactions_original.length);
+    });
   });
 });
