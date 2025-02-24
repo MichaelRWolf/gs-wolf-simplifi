@@ -134,3 +134,11 @@ function debugCsvSplitCleanup() {
         Logger.log(`Row ${rowIndex + 1}: [${row.join(" | ")}]`);
     });
 }
+
+
+function characterizeParseCsvBehaviorForWhitespaceOnlyFields() {
+  // Maybe this is helpful figuring out if whitespace is handled correctly
+  var csvString = ',,"", "  ", "123", "2024-02-24", "true", "false"';
+  var parsed = Utilities.parseCsv(csvString);
+  Logger.log(JSON.stringify(parsed)); // Check how empty fields behave
+}
