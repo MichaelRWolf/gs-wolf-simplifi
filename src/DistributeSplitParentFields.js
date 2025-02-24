@@ -84,7 +84,7 @@ function parseCsvRespectingQuotes(input) {
   }
 }
 
-function testUtilitiesParseCsv() {
+function debugUtilitiesParseCsv() {
     var csvString = '"John, Doe",25,"New York, NY"';
     var parsed = Utilities.parseCsv(csvString);
     parsed.forEach((row, rowIndex) => {
@@ -92,7 +92,7 @@ function testUtilitiesParseCsv() {
     });
 }
 
-function testCustomFunctionParseCsv_With1RowString() {
+function debugCustomFunctionParseCsv_With1RowString() {
     var csvString = '"Jane, Doe",23,"Kingston, NY"';
     var parsed = parseCsvRespectingQuotes(csvString);
     parsed.forEach((row, rowIndex) => {
@@ -100,7 +100,7 @@ function testCustomFunctionParseCsv_With1RowString() {
     });
 }
 
-function testCustomFunctionParseCsv_With3RowString() {
+function debugCustomFunctionParseCsv_With3RowString() {
     var csvString = '"Alice, Smith",30,"Los Angeles, CA"\n"Bob, Brown",40,"Chicago, IL"\n"Charlie, Davis",50,"Houston, TX"';
     var parsed = parseCsvRespectingQuotes(csvString);
     parsed.forEach((row, rowIndex) => {
@@ -108,7 +108,7 @@ function testCustomFunctionParseCsv_With3RowString() {
     });
 }
 
-function testCustomFunctionParseCsv_With2DimensionArray() {
+function debugCustomFunctionParseCsv_With2DimensionArray() {
     var csvArray = [
         ['"David, Johnson",35,"Miami, FL"'],
         ['"Eve, White",45,"Denver, CO"']
@@ -119,7 +119,7 @@ function testCustomFunctionParseCsv_With2DimensionArray() {
     });
 }
 
-function testCsvSplitCleanup() {
+function debugCsvSplitCleanup() {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Split from CSV');
     if (!sheet) {
         Logger.log("Error: Sheet 'Split from CSV' not found.");
