@@ -57,7 +57,10 @@ function distributeSplitParentFieldsToChildren(transactions) {
  * @customfunction
  */
 function csv_split_cleanup(transactions) {
-  return distributeSplitParentFieldsToChildren(transactions);
+  // Filter out empty rows: Keep only rows that have at least one non-empty value
+  var filteredData = transactions.filter(row => row.some(cell => cell !== ""));
+  var distributedData = distributeSplitParentFieldsToChildren(filteredData);
+  return distributedData;
 }
 
 /**
@@ -112,6 +115,22 @@ function testCustomFunctionParseCsv_With2DimensionArray() {
     ];
     var parsed = parseCsvRespectingQuotes(csvArray);
     parsed.forEach((row, rowIndex) => {
+        Logger.log(`Row ${rowIndex + 1}: [${row.join(" | ")}]`);
+    });
+}
+
+function testCsvSplitCleanup() {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Split from CSV');
+    if (!sheet) {
+        Logger.log("Error: Sheet 'Split from CSV' not found.");
+        return;
+    }
+
+    // Get full range A1:P
+    var data = sheet.getRange("A1:P").getValues();
+
+    var result = csv_split_cleanup(data);
+    result.forEach((row, rowIndex) => {
         Logger.log(`Row ${rowIndex + 1}: [${row.join(" | ")}]`);
     });
 }
