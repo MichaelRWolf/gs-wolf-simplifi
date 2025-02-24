@@ -71,17 +71,51 @@ function csv_split_cleanup(transactions) {
  * @customfunction
  */
 function parseCsvRespectingQuotes(input) {
-  if (!input) {
-    return [['Error: No data provided']];
-  }
+  let stringy2dArray;
   
-  if (typeof input === 'string') {
-    return Utilities.parseCsv(input);
+  if (!input) {
+    stringy2dArray = [['Error: No data provided']];
+  } else if (typeof input === 'string') {
+    stringy2dArray = Utilities.parseCsv(input);
   } else if (Array.isArray(input) && input.length > 0) {
-    return input.map(row => row[0] ? Utilities.parseCsv(row[0])[0] : []);
+    stringy2dArray = input.map(row => row[0] ? Utilities.parseCsv(row[0])[0] : []);
   } else {
-    return [['Error: Invalid input type']];
+    stringy2dArray = [['Error: Invalid input type']];
   }
+
+  let mixedType2dArray = stringy2dArray;
+  
+  return mixedType2dArray;
+}
+
+/**
+ * Attempts to convert a string to a Date object if it represents a valid date.
+ * Otherwise, returns the original string.
+ * @param {string} str - The string to evaluate.
+ * @return {Date|string} - The Date object if valid, otherwise the original string.
+ */
+function promoteStringToDateMaybe(str) {
+  let date = new Date(str);
+  return isNaN(date.getTime()) ? str : date;
+}
+
+/**
+ * Runs test cases for promoteStringToDateMaybe and logs the results.
+ */
+function debugPromoteStringToDateMaybe() {
+  const testCases = [
+    "2024-02-24",
+    "Not a date",
+    "12/31/1999",
+    "2024-02-30",
+    "Feb 24, 2024"
+  ];
+  
+  testCases.forEach(test => {
+    let output = promoteStringToDateMaybe(test);
+    let outputType = Object.prototype.toString.call(output);
+    console.log(`Input: ${test}, Output: ${output}, Type: ${outputType}`);
+  });
 }
 
 function debugUtilitiesParseCsv() {

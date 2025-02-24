@@ -4,6 +4,9 @@
 
 ### Test
 
+- Redirect tab `Data - Digested` away from `Data - Raw` and to `Data - Split Fields Distributed`. There seems to be a problem with sorting by date. Probably because former was created with 'split' that auto-created numbers and dates, and later was created with @CustomFunction that did not.
+  - Add logic after Utilities.parseCsv() to detect/convert Date() (and maybe Number()) objects.
+
 -- Before
 splitCategory(${1:categoryString})$0
 
@@ -17,8 +20,41 @@ splitCategory(${1:categoryString})$0
 - deconstruct pivot table(s) into pivotTableBuilder(s)
 - add pivotTableBuilder.build() to 'Pivot Tables' tab (via arrayformula trigger onLoad)
 
+### AutoConvertAfterCsvParse
+
+```javascript
+function parseCsvRespectingQuotes(input) {
+	if (!input) {
+		return [["Error: No data provided"]];
+	}
+
+	function convertValue(value) {
+		if (!value.trim()) return ""; // Preserve empty fields
+		if (!isNaN(value) && value.trim() !== "") return Number(value); // Convert to number
+		if (!isNaN(Date.parse(value))) return new Date(value); // Convert to Date
+		if (value.toLowerCase() === "true") return true; // Convert to Boolean true
+		if (value.toLowerCase() === "false") return false; // Convert to Boolean false
+		return value; // Return original string
+	}
+
+	if (typeof input === "string") {
+		return Utilities.parseCsv(input).map((row) => row.map(convertValue));
+	} else if (Array.isArray(input) && input.length > 0) {
+		return input.map((row) =>
+			row[0] ? Utilities.parseCsv(row[0])[0].map(convertValue) : [],
+		);
+	} else {
+		return [["Error: Invalid input type"]];
+	}
+}
+```
+
 ## DONE
 
+- Create formula to call csv_split_cleanup()
+- Create JS CustomFunction csv_split_cleanup()
+- Create JS function distributeSplitParentFieldsToChildren();
+- Create JS function parseCsvRespectingQuotes(input) - string or array
 - Remove 'applyFormatting', a deprecated aggregator
 - Create onSelectionChange() to prevent expensive (and wasteful) action onLoad.
 - Remove dependency on 'Pivot Tables' as special name
