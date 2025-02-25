@@ -8,10 +8,10 @@ function distributeSplitParentFieldsToChildren(transactions) {
 
   // Add the information transaction row
   var infoTransaction = {
-    'postedOn': new Date().toLocaleDateString('en-US'),
+    'postedOn': new Date().toLocaleDateString('en-CA'),
     'state': 'INFO',
     'category': 'SPLIT',
-    'amount': '$0.00',
+    'amount': 0.00,
     'notes': 'Updated ' + new Date().toISOString(),
     'payee': 'Distribute SPLIT fields from parent to children.'
   };
@@ -67,7 +67,7 @@ function csv_split_cleanup(transactions) {
  * Splits CSV data while respecting quoted fields.
  * Accepts either a full CSV string or a 1-column range.
  * @param {string|string[][]} input - A CSV string or a range of values (e.g., Raw!A:A)
- * @return {string[][]} - Parsed CSV output
+ * @return {Array<Array<string|Date>>} - Parsed CSV output with strings and Date objects
  * @customfunction
  */
 function parseCsvRespectingQuotes(input) {
@@ -82,6 +82,12 @@ function parseCsvRespectingQuotes(input) {
   } else {
     stringy2dArray = [['Error: Invalid input type']];
   }
+  
+  stringy2dArray = stringy2dArray.map(row =>
+    row.map(cell =>
+      promoteDollarAmountToFloatString(promoteStringToDateMaybe(cell))
+    )
+);
 
   let mixedType2dArray = stringy2dArray;
   
@@ -94,27 +100,56 @@ function parseCsvRespectingQuotes(input) {
  * @param {string} str - The string to evaluate.
  * @return {Date|string} - The Date object if valid, otherwise the original string.
  */
+const validDatePattern = new RegExp(
+  "^\\s*(\\d{4}-\\d{2}-\\d{2}|\\d{1,2}\\/\\d{1,2}\\/\\d{4}|[A-Za-z]+ \\d{1,2}, \\d{4})\\s*$"
+);
 function promoteStringToDateMaybe(str) {
+  
+  if (!validDatePattern.test(str)) {
+    return str; // Reject if it doesn't fully match a valid date format
+  }
+
   let date = new Date(str);
-  return isNaN(date.getTime()) ? str : date;
+  return isNaN(date.getTime()) ? str : date.toLocaleDateString('en-CA');
+}
+
+/**
+ * Converts a dollar amount string to a float string by removing the "$" sign.
+ * @param {string} str - The dollar amount string.
+ * @return {string} - The numeric string representation of the amount.
+ */
+const dollarAmountPattern = new RegExp("^(-?)[$]([0-9,.]+)$");
+function promoteDollarAmountToFloatString(str) {
+  const dollarAmountPattern = new RegExp("^(-?)[$]([0-9,.]+)$");
+  const match = str.match(dollarAmountPattern);
+  return match ? parseFloat(match[1] + match[2].replace(/,/g, "")) : str;
 }
 
 /**
  * Runs test cases for promoteStringToDateMaybe and logs the results.
  */
-function debugPromoteStringToDateMaybe() {
+function debugPromoteXXX() {
   const testCases = [
-    "2024-02-24",
     "Not a date",
+
+    "2024-02-24",
     "12/31/1999",
-    "2024-02-30",
-    "Feb 24, 2024"
+    "2024-02-28",
+    "Feb 24, 2024",
+
+    "junk 7/4/2000 junk",
+    "Meals & Dining - @100% (business)",
+
+    "$5.99",
+    "-$5.99",
+    "$1,005.99",
+    "-$2,005.99",
   ];
   
   testCases.forEach(test => {
-    let output = promoteStringToDateMaybe(test);
+    let output = promoteStringToDateMaybe(promoteDollarAmountToFloatString(test));
     let outputType = Object.prototype.toString.call(output);
-    console.log(`Input: ${test}, Output: ${output}, Type: ${outputType}`);
+    console.log(`Input: '${test}', Output: '${output}', Type: '${outputType}'`);
   });
 }
 
