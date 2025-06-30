@@ -7,11 +7,11 @@
 
 // Simple, pure functions - easily testable
 function accumulateDollars(balanceDollars, amountInDollars) {
-  return balanceDollars + (amountInDollars || 0);
+  return 0.00 + balanceDollars + (amountInDollars || 0.00);
 }
 
 function accumulateHours(balanceHours, timeInHours) {
-  return balanceHours + (timeInHours || 0);
+  return 0.00 + balanceHours + (timeInHours || 0.00);
 }
 
 // Pure functions that work with arrays - testable on MacBook
