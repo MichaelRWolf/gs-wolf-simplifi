@@ -4,15 +4,15 @@
   "description": "Google Apps Script for financial data processing",
   "main": "src/Code.js",
   "scripts": {
-    "build":       "chmod 644 dist/*.js 2>/dev/null || true && tsc --project tsconfig.GAS.json && chmod -R ugo-w dist/*",
-    "build:watch": "chmod 644 dist/*.js 2>/dev/null || true && tsc --project tsconfig.GAS.json --watch && chmod -R ugo-w dist/*",
+    "update-config": "node tsconfig_transform.js",
+    "build": "npm run update-config && chmod 644 dist/*.js 2>/dev/null || true && tsc --project tsconfig.GAS.json && chmod -R ugo-w dist/*",
+    "build:watch": "npm run update-config && chmod 644 dist/*.js 2>/dev/null || true && tsc --project tsconfig.GAS.json --watch && chmod -R ugo-w dist/*",
     "deploy": "npm run build && clasp push",
     "deploy:full": "npm test && npm run deploy",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
+    "test": "npm run update-config && jest",
+    "test:watch": "npm run update-config && jest --watch",
+    "test:coverage": "npm run update-onfig && jest --coverage",
     "open:urls": "open 'https://script.google.com/u/0/home/projects/1vZxhYsPWTTxwmvf-x7p6MnI8LWzNkNRQIhkPvTblaZ9yNQ1CR4bOamMB/edit' && open 'https://docs.google.com/spreadsheets/d/13osRy0mj4zq8cSxxxmjy6RECt3ZOTCPY385EPWaE_9k/edit?gid=1122782446#gid=1122782446'"
-
   },
   "devDependencies": {
     "@types/google-apps-script": "^1.0.83",
