@@ -21,22 +21,18 @@ function needsUpdate() {
 // Only proceed if update is needed
 if (needsUpdate()) {
   console.log('Updating tsconfig.GAS.json...');
-  
   // Ensure the script can modify the file by removing read-only attribute
   fs.chmod(tsconfigOutPath, 0o644, (err) => {
-    if (err && err.code !== 'ENOENT') {
-      // Ignore if file doesn't exist yet
+    if (err && err.code !== 'ENOENT') { // Ignore if file doesn't exist yet
       console.error(`Error making ${tsconfigOutPath} writable: ${err.message}`);
       return;
     }
-
     // Read input file
     fs.readFile(tsconfigInPath, 'utf8', (err, data) => {
       if (err) {
         console.error(`Error reading tsconfig.json: ${err.message}`);
         return;
       }
-
       // Parse JSON
       let tsconfig;
       try {
@@ -45,8 +41,7 @@ if (needsUpdate()) {
         console.error(`Error parsing tsconfig.json: ${err.message}`);
         return;
       }
-
-      // Override options
+      // Override options for Google Apps Script compatibility
       tsconfig.compilerOptions = tsconfig.compilerOptions || {};
       tsconfig.compilerOptions.target = 'ES5';
       tsconfig.compilerOptions.module = 'none';
@@ -54,12 +49,16 @@ if (needsUpdate()) {
       tsconfig.compilerOptions.allowJs = true;
       tsconfig.compilerOptions.checkJs = false;
       tsconfig.compilerOptions.lib = ["es5"];
-      tsconfig.include = [ "src/**/*.js" ];
-      tsconfig.exclude = [ "test/**/*.ts", "node_modules" ];
-
       tsconfig.compilerOptions.esModuleInterop = true;
       tsconfig.compilerOptions.moduleResolution = "classic";
-
+      tsconfig.compilerOptions.forceConsistentCasingInFileNames = true;
+      tsconfig.compilerOptions.noImplicitAny = true;
+      tsconfig.compilerOptions.skipLibCheck = false;
+      tsconfig.compilerOptions.removeComments = false;
+      tsconfig.compilerOptions.typeRoots = ["./node_modules/@types"];
+      // Set include/exclude patterns
+      tsconfig.include = ["src/**/*.js"];
+      tsconfig.exclude = ["test/**/*.ts", "node_modules"];
       // Write to output file
       const tsconfigData = JSON.stringify(tsconfig, null, 2);
       fs.writeFile(tsconfigOutPath, tsconfigData, 'utf8', (err) => {
@@ -68,7 +67,6 @@ if (needsUpdate()) {
           return;
         }
         console.log(`'${tsconfigOutPath}' has been created from '${tsconfigInPath}!'`);
-
         // Set the file as read-only
         fs.chmod(tsconfigOutPath, 0o444, (err) => {
           if (err) {
